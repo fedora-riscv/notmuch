@@ -10,13 +10,12 @@
 
 Name: notmuch
 Version: 0.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
 URL: http://notmuchmail.org/
 Source0: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: xapian-core-devel
 BuildRequires: gmime-devel
@@ -87,9 +86,6 @@ make install DESTDIR=%{buildroot}
 # Enable dynamic library stripping.
 find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
 
-%clean
-rm -rf %{buildroot}
-
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
@@ -118,6 +114,10 @@ rm -rf %{buildroot}
 %{_emacs_sitelispdir}/*.el
 
 %changelog
+* Thu Nov 25 2010 Karel Klic <kklic@redhat.com> - 0.5-2
+- Removed BuildRoot tag
+- Removed %%clean section
+
 * Mon Nov 15 2010 Karel Klic <kklic@redhat.com> - 0.5-1
 - New upstream release
 

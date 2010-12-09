@@ -1,22 +1,11 @@
-%if %($(pkg-config emacs) ; echo $?)
-%global emacs_version 23.1
-%global emacs_lispdir %{_datadir}/emacs/site-lisp
-%global emacs_startdir %{_datadir}/emacs/site-lisp/site-start.d
-%else
-%global emacs_version %(pkg-config emacs --modversion)
-%global emacs_lispdir %(pkg-config emacs --variable sitepkglispdir)
-%global emacs_startdir %(pkg-config emacs --variable sitestartdir)
-%endif
-
 Name: notmuch
 Version: 0.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
 URL: http://notmuchmail.org/
 Source0: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
-
 BuildRequires: xapian-core-devel
 BuildRequires: gmime-devel
 BuildRequires: libtalloc-devel
@@ -54,7 +43,7 @@ Notmuch library.  You'll also need to install the notmuch package.
 Summary: Not much support for Emacs
 Group: Applications/Editors
 BuildArch: noarch
-Requires: %{name} = %{version}-%{release}, emacs(bin) >= %{emacs_version}
+Requires: %{name} = %{version}-%{release}, emacs(bin) >= %{_emacs_version}
 
 %description -n emacs-notmuch
 %{summary}.
@@ -114,6 +103,9 @@ find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
 %{_emacs_sitelispdir}/*.el
 
 %changelog
+* Thu Dec 09 2010 Karel Klic <kklic@redhat.com> - 0.5-3
+- Removed local emacs %%globals, as they are not needed
+
 * Thu Nov 25 2010 Karel Klic <kklic@redhat.com> - 0.5-2
 - Removed BuildRoot tag
 - Removed %%clean section

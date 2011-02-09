@@ -1,6 +1,6 @@
 Name: notmuch
 Version: 0.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -103,6 +103,9 @@ find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
 %{_emacs_sitelispdir}/*.el
 
 %changelog
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Thu Dec 09 2010 Karel Klic <kklic@redhat.com> - 0.5-3
 - Removed local emacs %%globals, as they are not needed
 

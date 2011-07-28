@@ -1,11 +1,12 @@
 Name: notmuch
-Version: 0.5
-Release: 4%{?dist}
+Version: 0.6.1
+Release: 1%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
 URL: http://notmuchmail.org/
 Source0: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
+Patch0: notmuch-0.6.1-gmime.patch
 BuildRequires: xapian-core-devel
 BuildRequires: gmime-devel
 BuildRequires: libtalloc-devel
@@ -59,6 +60,7 @@ Requires: emacs-notmuch = %{version}-%{release}
 
 %prep
 %setup -q
+%patch0 -p1 -b .gmime
 
 %build
 # The %%configure macro cannot be used because notmuch doesn't support
@@ -69,7 +71,6 @@ Requires: emacs-notmuch = %{version}-%{release}
 make %{?_smp_mflags} CFLAGS="%{optflags}"
 
 %install
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 
 # Enable dynamic library stripping.
@@ -80,29 +81,29 @@ find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING COPYING-GPL-3 INSTALL README TODO
 %{_sysconfdir}/bash_completion.d/notmuch
-%{_datadir}/zsh/functions/Completion/Unix/notmuch
+%{_datadir}/zsh/functions/Completion/Unix/_notmuch
 %{_bindir}/notmuch
 %{_mandir}/man1/notmuch.1*
 %{_libdir}/libnotmuch.so.1*
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/libnotmuch.so
 %{_includedir}/*
 
 %files -n emacs-notmuch
-%defattr(-,root,root,-)
 %{_emacs_sitelispdir}/*.elc
 %{_emacs_sitelispdir}/notmuch-logo.png
 
 %files -n emacs-notmuch-el
-%defattr(-,root,root,-)
 %{_emacs_sitelispdir}/*.el
 
 %changelog
+* Thu Jul 28 2011 Karel Klíč <kklic@redhat.com> - 0.6.1-1
+- Latest upstream release
+- Added -gmime patch to compile with GMime 2.5.x (upstream uses GMime 2.4.x)
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

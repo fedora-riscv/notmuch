@@ -1,6 +1,8 @@
+%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+
 Name: notmuch
 Version: 0.6.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -58,6 +60,16 @@ Requires: emacs-notmuch = %{version}-%{release}
 %description -n emacs-notmuch-el
 %{summary}.
 
+%package -n python-notmuch
+Summary: Python bindings for notmuch
+Group: Development/Libraries
+BuildArch: noarch
+Requires: %{name} = %{version}-%{release}
+BuildRequires: python-devel
+
+%description -n python-notmuch
+%{summary}.
+
 %prep
 %setup -q
 %patch0 -p1 -b .gmime
@@ -70,11 +82,21 @@ Requires: emacs-notmuch = %{version}-%{release}
    --emacslispdir=%{_emacs_sitelispdir}
 make %{?_smp_mflags} CFLAGS="%{optflags}"
 
+# Build the python bindings
+pushd bindings/python
+    python setup.py build
+popd
+
 %install
 make install DESTDIR=%{buildroot}
 
 # Enable dynamic library stripping.
 find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
+
+# Install the python bindings and documentation
+pushd bindings/python
+    python setup.py install -O1 --skip-build --root %{buildroot}
+popd
 
 %post -p /sbin/ldconfig
 
@@ -99,7 +121,14 @@ find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
 %files -n emacs-notmuch-el
 %{_emacs_sitelispdir}/*.el
 
+%files -n python-notmuch
+%doc bindings/python/README
+%{python_sitelib}/*
+
 %changelog
+* Tue Aug 09 2011 Luke Macken <lmacken@redhat.com> - 0.6.1-2
+- Create a subpackage for the Python bindings
+
 * Thu Jul 28 2011 Karel Klíč <kklic@redhat.com> - 0.6.1-1
 - Latest upstream release
 - Added -gmime patch to compile with GMime 2.5.x (upstream uses GMime 2.4.x)

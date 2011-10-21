@@ -1,8 +1,8 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name: notmuch
-Version: 0.6.1
-Release: 2%{?dist}
+Version: 0.9
+Release: 1%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -108,7 +108,7 @@ popd
 %{_datadir}/zsh/functions/Completion/Unix/_notmuch
 %{_bindir}/notmuch
 %{_mandir}/man1/notmuch.1*
-%{_libdir}/libnotmuch.so.1*
+%{_libdir}/libnotmuch.so.2*
 
 %files devel
 %{_libdir}/libnotmuch.so
@@ -126,6 +126,9 @@ popd
 %{python_sitelib}/*
 
 %changelog
+* Thu Oct 20 2011 Luke Macken <lmacken@redhat.com> - 0.9-1
+- Latest upstream release
+
 * Tue Aug 09 2011 Luke Macken <lmacken@redhat.com> - 0.6.1-2
 - Create a subpackage for the Python bindings
 

@@ -2,7 +2,7 @@
 
 Name: notmuch
 Version: 0.9
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -126,6 +126,9 @@ popd
 %{python_sitelib}/*
 
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Thu Oct 20 2011 Luke Macken <lmacken@redhat.com> - 0.9-1
 - Latest upstream release
 

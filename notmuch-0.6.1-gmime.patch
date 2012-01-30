@@ -1,7 +1,20 @@
-diff -up notmuch-0.6.1/notmuch-client.h.gmime notmuch-0.6.1/notmuch-client.h
---- notmuch-0.6.1/notmuch-client.h.gmime	2011-07-17 16:20:51.000000000 +0200
-+++ notmuch-0.6.1/notmuch-client.h	2011-07-28 17:24:16.904949635 +0200
-@@ -68,7 +68,7 @@ typedef struct notmuch_show_format {
+From bafee58abf6ba44d04fe32dfdb1bab18d60fba63 Mon Sep 17 00:00:00 2001
+From: Stanislav Ochotnicky <sochotnicky@redhat.com>
+Date: Mon, 30 Jan 2012 13:22:34 +0100
+Subject: [PATCH] Fix gmime
+
+---
+ notmuch-client.h |    4 +-
+ notmuch-reply.c  |    5 +--
+ notmuch-show.c   |   83 +++++++++++++++++++++++++++--------------------------
+ show-message.c   |   27 +++++++----------
+ 4 files changed, 56 insertions(+), 63 deletions(-)
+
+diff --git a/notmuch-client.h b/notmuch-client.h
+index c602e2e..371aef9 100644
+--- a/notmuch-client.h
++++ b/notmuch-client.h
+@@ -69,7 +69,7 @@ typedef struct notmuch_show_format {
      void (*part_start) (GMimeObject *part,
  			int *part_count);
      void (*part_encstatus) (int status);
@@ -10,7 +23,7 @@ diff -up notmuch-0.6.1/notmuch-client.h.gmime notmuch-0.6.1/notmuch-client.h
      void (*part_content) (GMimeObject *part);
      void (*part_end) (GMimeObject *part);
      const char *part_sep;
-@@ -82,7 +82,7 @@ typedef struct notmuch_show_params {
+@@ -83,7 +83,7 @@ typedef struct notmuch_show_params {
      int entire_thread;
      int raw;
      int part;
@@ -19,28 +32,32 @@ diff -up notmuch-0.6.1/notmuch-client.h.gmime notmuch-0.6.1/notmuch-client.h
      int decrypt;
  } notmuch_show_params_t;
  
-diff -up notmuch-0.6.1/notmuch-reply.c.gmime notmuch-0.6.1/notmuch-reply.c
---- notmuch-0.6.1/notmuch-reply.c.gmime	2011-07-17 16:20:51.000000000 +0200
-+++ notmuch-0.6.1/notmuch-reply.c	2011-07-28 17:24:16.904949635 +0200
-@@ -610,13 +610,10 @@ notmuch_reply_command (void *ctx, int ar
+diff --git a/notmuch-reply.c b/notmuch-reply.c
+index 7242310..bfc8868 100644
+--- a/notmuch-reply.c
++++ b/notmuch-reply.c
+@@ -645,15 +645,12 @@ notmuch_reply_command (void *ctx, int argc, char *argv[])
  	    }
  	} else if ((STRNCMP_LITERAL (argv[i], "--decrypt") == 0)) {
  	    if (params.cryptoctx == NULL) {
 -		GMimeSession* session = g_object_new(g_mime_session_get_type(), NULL);
--		if (NULL == (params.cryptoctx = g_mime_gpg_context_new(session, "gpg")))
-+		if (NULL == (params.cryptoctx = g_mime_gpg_context_new(NULL, "gpg")))
+-		if (NULL == (params.cryptoctx = g_mime_gpg_context_new(session, "gpg"))) {
++		if (NULL == (params.cryptoctx = g_mime_gpg_context_new(NULL, "gpg"))) {
  		    fprintf (stderr, "Failed to construct gpg context.\n");
- 		else
+ 		} else {
+ 		    params.decrypt = TRUE;
  		    g_mime_gpg_context_set_always_trust((GMimeGpgContext*)params.cryptoctx, FALSE);
+ 		}
 -		g_object_unref (session);
 -		session = NULL;
  	    }
  	} else {
  	    fprintf (stderr, "Unrecognized option: %s\n", argv[i]);
-diff -up notmuch-0.6.1/notmuch-show.c.gmime notmuch-0.6.1/notmuch-show.c
---- notmuch-0.6.1/notmuch-show.c.gmime	2011-07-17 16:20:51.000000000 +0200
-+++ notmuch-0.6.1/notmuch-show.c	2011-07-28 17:24:16.905949620 +0200
-@@ -70,7 +70,7 @@ static void
+diff --git a/notmuch-show.c b/notmuch-show.c
+index 19fb49f..58f9f43 100644
+--- a/notmuch-show.c
++++ b/notmuch-show.c
+@@ -76,7 +76,7 @@ static void
  format_part_encstatus_json (int status);
  
  static void
@@ -49,7 +66,7 @@ diff -up notmuch-0.6.1/notmuch-show.c.gmime notmuch-0.6.1/notmuch-show.c
  
  static void
  format_part_content_json (GMimeObject *part);
-@@ -420,16 +420,14 @@ show_text_part_content (GMimeObject *par
+@@ -487,16 +487,14 @@ show_text_part_content (GMimeObject *part, GMimeStream *stream_out)
  }
  
  static const char*
@@ -70,7 +87,7 @@ diff -up notmuch-0.6.1/notmuch-show.c.gmime notmuch-0.6.1/notmuch-show.c
  	return "error";
      }
      return "unknown";
-@@ -524,59 +522,65 @@ format_part_encstatus_json (int status)
+@@ -593,59 +591,65 @@ format_part_encstatus_json (int status)
  }
  
  static void
@@ -148,6 +165,9 @@ diff -up notmuch-0.6.1/notmuch-show.c.gmime notmuch-0.6.1/notmuch-show.c
 -       if (signer->errors != GMIME_SIGNER_ERROR_NONE) {
 -           printf (", \"errors\": %x", signer->errors);
 -       }
+-
+-       printf ("}");
+-       signer = signer->next;
 +	} else if (certificate) {
 +	    const char *key_id = g_mime_certificate_get_key_id (certificate);
 +	    if (key_id)
@@ -158,14 +178,12 @@ diff -up notmuch-0.6.1/notmuch-show.c.gmime notmuch-0.6.1/notmuch-show.c
 +	if (errors != GMIME_SIGNATURE_ERROR_NONE) {
 +	    printf (", \"errors\": %x", errors);
 +	}
- 
--       printf ("}");
--       signer = signer->next;
++
 +	printf ("}");
      }
  
      printf ("]");
-@@ -899,13 +903,10 @@ notmuch_show_command (void *ctx, unused 
+@@ -973,13 +977,10 @@ notmuch_show_command (void *ctx, unused (int argc), unused (char *argv[]))
  	} else if ((STRNCMP_LITERAL (argv[i], "--verify") == 0) ||
  		   (STRNCMP_LITERAL (argv[i], "--decrypt") == 0)) {
  	    if (params.cryptoctx == NULL) {
@@ -180,9 +198,10 @@ diff -up notmuch-0.6.1/notmuch-show.c.gmime notmuch-0.6.1/notmuch-show.c
  	    }
  	    if (STRNCMP_LITERAL (argv[i], "--decrypt") == 0)
  		params.decrypt = 1;
-diff -up notmuch-0.6.1/show-message.c.gmime notmuch-0.6.1/show-message.c
---- notmuch-0.6.1/show-message.c.gmime	2011-07-17 16:20:51.000000000 +0200
-+++ notmuch-0.6.1/show-message.c	2011-07-28 17:27:12.295304742 +0200
+diff --git a/show-message.c b/show-message.c
+index d83f04e..beb5a5c 100644
+--- a/show-message.c
++++ b/show-message.c
 @@ -68,15 +68,16 @@ show_message_part (GMimeObject *part,
  			 g_mime_multipart_get_count (multipart));
  	    } else {
@@ -231,3 +250,6 @@ diff -up notmuch-0.6.1/show-message.c.gmime notmuch-0.6.1/show-message.c
  	    }
  	}
  
+-- 
+1.7.7.6
+

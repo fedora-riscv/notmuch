@@ -1,8 +1,8 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name: notmuch
-Version: 0.9
-Release: 2%{?dist}
+Version: 0.11
+Release: 1%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -126,6 +126,10 @@ popd
 %{python_sitelib}/*
 
 %changelog
+* Mon Jan 30 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0.11-1
+- Latest upstream release
+- Update patch so it applies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

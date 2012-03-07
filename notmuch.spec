@@ -1,12 +1,13 @@
 Name: notmuch
 Version: 0.6.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
 URL: http://notmuchmail.org/
 Source0: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
 Patch0: notmuch-0.6.1-gmime.patch
+Patch1: notmuch-cve-2011-1103.patch
 BuildRequires: xapian-core-devel
 BuildRequires: gmime-devel
 BuildRequires: libtalloc-devel
@@ -61,6 +62,7 @@ Requires: emacs-notmuch = %{version}-%{release}
 %prep
 %setup -q
 %patch0 -p1 -b .gmime
+%patch1 -p1 -b .cve-2011-1103
 
 %build
 # The %%configure macro cannot be used because notmuch doesn't support
@@ -100,6 +102,9 @@ find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
 %{_emacs_sitelispdir}/*.el
 
 %changelog
+* Wed Mar  7 2012 Karel Klíč <kklic@redhat.com> - 0.6.1-2
+- Added patch for CVE-2011-1103: tag information disclosure flaw
+
 * Thu Jul 28 2011 Karel Klíč <kklic@redhat.com> - 0.6.1-1
 - Latest upstream release
 - Added -gmime patch to compile with GMime 2.5.x (upstream uses GMime 2.4.x)

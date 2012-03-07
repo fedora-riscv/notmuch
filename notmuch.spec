@@ -1,7 +1,7 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name: notmuch
-Version: 0.11
+Version: 0.11.1
 Release: 1%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
@@ -126,6 +126,9 @@ popd
 %{python_sitelib}/*
 
 %changelog
+* Wed Mar  7 2012 Karel Klíč <kklic@redhat.com> - 0.11.1-1
+- Update to newest release, which fixes CVE-2011-1103
+
 * Mon Jan 30 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0.11-1
 - Latest upstream release
 - Update patch so it applies

@@ -1,19 +1,15 @@
+%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+
 Name: notmuch
-Version: 0.6.1
+Version: 0.13.2
 Release: 2%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
 URL: http://notmuchmail.org/
 Source0: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
-Patch0: notmuch-0.6.1-gmime.patch
-Patch1: notmuch-cve-2011-1103.patch
-BuildRequires: xapian-core-devel
-BuildRequires: gmime-devel
-BuildRequires: libtalloc-devel
-BuildRequires: zlib-devel
-BuildRequires: emacs-el
-BuildRequires: emacs-nox
+BuildRequires: xapian-core-devel gmime-devel libtalloc-devel
+BuildRequires: zlib-devel emacs-el emacs-nox perl python2-devel
 
 %description
 Fast system for indexing, searching, and tagging email.  Even if you
@@ -46,23 +42,33 @@ Summary: Not much support for Emacs
 Group: Applications/Editors
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}, emacs(bin) >= %{_emacs_version}
+Obsoletes: emacs-notmuch-el < 0.11.1-2
+Provides: emacs-notmuch-el < 0.11.1-2
 
 %description -n emacs-notmuch
 %{summary}.
 
-%package -n emacs-notmuch-el
-Summary: Elisp source files for Not much support for Emacs
-Group: Applications/Editors
+%package -n python-notmuch
+Summary: Python bindings for notmuch
+Group: Development/Libraries
 BuildArch: noarch
-Requires: emacs-notmuch = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
 
-%description -n emacs-notmuch-el
+%description -n python-notmuch
 %{summary}.
+
+%package mutt
+Summary: Notmuch (of a) helper for Mutt
+Group: Development/Libraries
+BuildArch: noarch
+Requires: %{name} = %{version}-%{release}
+
+%description mutt
+notmuch-mutt provide integration among the Mutt mail user agent and
+the Notmuch mail indexer.
 
 %prep
 %setup -q
-%patch0 -p1 -b .gmime
-%patch1 -p1 -b .cve-2011-1103
 
 %build
 # The %%configure macro cannot be used because notmuch doesn't support
@@ -72,38 +78,99 @@ Requires: emacs-notmuch = %{version}-%{release}
    --emacslispdir=%{_emacs_sitelispdir}
 make %{?_smp_mflags} CFLAGS="%{optflags}"
 
+# Build the python bindings
+pushd bindings/python
+    python setup.py build
+popd
+
+# Build notmuch-mutt
+pushd contrib/notmuch-mutt
+    make
+popd
+
 %install
 make install DESTDIR=%{buildroot}
 
 # Enable dynamic library stripping.
 find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
 
+# Install the python bindings and documentation
+pushd bindings/python
+    python setup.py install -O1 --skip-build --root %{buildroot}
+popd
+
+# Install notmuch-mutt
+install contrib/notmuch-mutt/notmuch-mutt %{buildroot}%{_bindir}/notmuch-mutt
+install contrib/notmuch-mutt/notmuch-mutt.1 %{buildroot}%{_mandir}/man1/notmuch-mutt.1
+
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS COPYING COPYING-GPL-3 INSTALL README TODO
+%doc AUTHORS COPYING COPYING-GPL-3 INSTALL README
 %{_sysconfdir}/bash_completion.d/notmuch
 %{_datadir}/zsh/functions/Completion/Unix/_notmuch
 %{_bindir}/notmuch
 %{_mandir}/man1/notmuch.1*
-%{_libdir}/libnotmuch.so.1*
+%{_mandir}/man1/notmuch-config.1*
+%{_mandir}/man1/notmuch-count.1*
+%{_mandir}/man1/notmuch-dump.1*
+%{_mandir}/man1/notmuch-new.1*
+%{_mandir}/man1/notmuch-reply.1*
+%{_mandir}/man1/notmuch-restore.1*
+%{_mandir}/man1/notmuch-search.1*
+%{_mandir}/man1/notmuch-setup.1*
+%{_mandir}/man1/notmuch-show.1*
+%{_mandir}/man1/notmuch-tag.1*
+%{_mandir}/man5/notmuch*.5*
+%{_mandir}/man7/notmuch*.7*
+%{_libdir}/libnotmuch.so.3*
 
 %files devel
 %{_libdir}/libnotmuch.so
 %{_includedir}/*
 
 %files -n emacs-notmuch
+%{_emacs_sitelispdir}/*.el
 %{_emacs_sitelispdir}/*.elc
 %{_emacs_sitelispdir}/notmuch-logo.png
 
-%files -n emacs-notmuch-el
-%{_emacs_sitelispdir}/*.el
+%files -n python-notmuch
+%doc bindings/python/README
+%{python_sitelib}/*
+
+%files mutt
+%{_bindir}/notmuch-mutt
+%{_mandir}/man1/notmuch-mutt.1*
 
 %changelog
+* Fri Jul 13 2012 Karel Klíč <kklic@redhat.com> - 0.13.2-2
+- Packaged notmuch-mutt from contrib
+
+* Fri Jul 13 2012 Karel Klíč <kklic@redhat.com> - 0.13.2-1
+- Update to the newest release
+- Merge emacs-notmuch-el into emacs-el to conform to the packaging
+  guidelines
+
+* Wed Mar  7 2012 Karel Klíč <kklic@redhat.com> - 0.11.1-1
+- Update to newest release, which fixes CVE-2011-1103
+
+* Mon Jan 30 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0.11-1
+- Latest upstream release
+- Update patch so it applies
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Thu Oct 20 2011 Luke Macken <lmacken@redhat.com> - 0.9-1
+- Latest upstream release
+
 * Wed Mar  7 2012 Karel Klíč <kklic@redhat.com> - 0.6.1-2
 - Added patch for CVE-2011-1103: tag information disclosure flaw
+
+* Tue Aug 09 2011 Luke Macken <lmacken@redhat.com> - 0.6.1-2
+- Create a subpackage for the Python bindings
 
 * Thu Jul 28 2011 Karel Klíč <kklic@redhat.com> - 0.6.1-1
 - Latest upstream release

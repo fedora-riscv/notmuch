@@ -166,9 +166,6 @@ install contrib/notmuch-mutt/notmuch-mutt.1 %{buildroot}%{_mandir}/man1/notmuch-
 * Thu Oct 20 2011 Luke Macken <lmacken@redhat.com> - 0.9-1
 - Latest upstream release
 
-* Wed Mar  7 2012 Karel Klíč <kklic@redhat.com> - 0.6.1-2
-- Added patch for CVE-2011-1103: tag information disclosure flaw
-
 * Tue Aug 09 2011 Luke Macken <lmacken@redhat.com> - 0.6.1-2
 - Create a subpackage for the Python bindings
 

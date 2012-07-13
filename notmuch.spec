@@ -2,18 +2,14 @@
 
 Name: notmuch
 Version: 0.13.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
 URL: http://notmuchmail.org/
 Source0: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
-BuildRequires: xapian-core-devel
-BuildRequires: gmime-devel
-BuildRequires: libtalloc-devel
-BuildRequires: zlib-devel
-BuildRequires: emacs-el
-BuildRequires: emacs-nox
+BuildRequires: xapian-core-devel gmime-devel libtalloc-devel
+BuildRequires: zlib-devel emacs-el emacs-nox perl python2-devel
 
 %description
 Fast system for indexing, searching, and tagging email.  Even if you
@@ -57,10 +53,19 @@ Summary: Python bindings for notmuch
 Group: Development/Libraries
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}
-BuildRequires: python-devel
 
 %description -n python-notmuch
 %{summary}.
+
+%package mutt
+Summary: Notmuch (of a) helper for Mutt
+Group: Development/Libraries
+BuildArch: noarch
+Requires: %{name} = %{version}-%{release}
+
+%description mutt
+notmuch-mutt provide integration among the Mutt mail user agent and
+the Notmuch mail indexer.
 
 %prep
 %setup -q
@@ -78,6 +83,11 @@ pushd bindings/python
     python setup.py build
 popd
 
+# Build notmuch-mutt
+pushd contrib/notmuch-mutt
+    make
+popd
+
 %install
 make install DESTDIR=%{buildroot}
 
@@ -89,6 +99,10 @@ pushd bindings/python
     python setup.py install -O1 --skip-build --root %{buildroot}
 popd
 
+# Install notmuch-mutt
+install contrib/notmuch-mutt/notmuch-mutt %{buildroot}%{_bindir}/notmuch-mutt
+install contrib/notmuch-mutt/notmuch-mutt.1 %{buildroot}%{_mandir}/man1/notmuch-mutt.1
+
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
@@ -98,7 +112,17 @@ popd
 %{_sysconfdir}/bash_completion.d/notmuch
 %{_datadir}/zsh/functions/Completion/Unix/_notmuch
 %{_bindir}/notmuch
-%{_mandir}/man1/notmuch*.1*
+%{_mandir}/man1/notmuch.1*
+%{_mandir}/man1/notmuch-config.1*
+%{_mandir}/man1/notmuch-count.1*
+%{_mandir}/man1/notmuch-dump.1*
+%{_mandir}/man1/notmuch-new.1*
+%{_mandir}/man1/notmuch-reply.1*
+%{_mandir}/man1/notmuch-restore.1*
+%{_mandir}/man1/notmuch-search.1*
+%{_mandir}/man1/notmuch-setup.1*
+%{_mandir}/man1/notmuch-show.1*
+%{_mandir}/man1/notmuch-tag.1*
 %{_mandir}/man5/notmuch*.5*
 %{_mandir}/man7/notmuch*.7*
 %{_libdir}/libnotmuch.so.3*
@@ -116,7 +140,14 @@ popd
 %doc bindings/python/README
 %{python_sitelib}/*
 
+%files mutt
+%{_bindir}/notmuch-mutt
+%{_mandir}/man1/notmuch-mutt.1*
+
 %changelog
+* Fri Jul 13 2012 Karel Klíč <kklic@redhat.com> - 0.13.2-2
+- Packaged notmuch-mutt from contrib
+
 * Fri Jul 13 2012 Karel Klíč <kklic@redhat.com> - 0.13.2-1
 - Update to the newest release
 - Merge emacs-notmuch-el into emacs-el to conform to the packaging

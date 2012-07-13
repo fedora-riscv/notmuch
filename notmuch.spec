@@ -1,14 +1,13 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name: notmuch
-Version: 0.11.1
+Version: 0.13.2
 Release: 1%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
 URL: http://notmuchmail.org/
 Source0: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
-Patch0: notmuch-0.6.1-gmime.patch
 BuildRequires: xapian-core-devel
 BuildRequires: gmime-devel
 BuildRequires: libtalloc-devel
@@ -47,17 +46,10 @@ Summary: Not much support for Emacs
 Group: Applications/Editors
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}, emacs(bin) >= %{_emacs_version}
+Obsoletes: emacs-notmuch-el < 0.11.1-2
+Provides: emacs-notmuch-el < 0.11.1-2
 
 %description -n emacs-notmuch
-%{summary}.
-
-%package -n emacs-notmuch-el
-Summary: Elisp source files for Not much support for Emacs
-Group: Applications/Editors
-BuildArch: noarch
-Requires: emacs-notmuch = %{version}-%{release}
-
-%description -n emacs-notmuch-el
 %{summary}.
 
 %package -n python-notmuch
@@ -72,7 +64,6 @@ BuildRequires: python-devel
 
 %prep
 %setup -q
-%patch0 -p1 -b .gmime
 
 %build
 # The %%configure macro cannot be used because notmuch doesn't support
@@ -103,29 +94,34 @@ popd
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS COPYING COPYING-GPL-3 INSTALL README TODO
+%doc AUTHORS COPYING COPYING-GPL-3 INSTALL README
 %{_sysconfdir}/bash_completion.d/notmuch
 %{_datadir}/zsh/functions/Completion/Unix/_notmuch
 %{_bindir}/notmuch
-%{_mandir}/man1/notmuch.1*
-%{_libdir}/libnotmuch.so.2*
+%{_mandir}/man1/notmuch*.1*
+%{_mandir}/man5/notmuch*.5*
+%{_mandir}/man7/notmuch*.7*
+%{_libdir}/libnotmuch.so.3*
 
 %files devel
 %{_libdir}/libnotmuch.so
 %{_includedir}/*
 
 %files -n emacs-notmuch
+%{_emacs_sitelispdir}/*.el
 %{_emacs_sitelispdir}/*.elc
 %{_emacs_sitelispdir}/notmuch-logo.png
-
-%files -n emacs-notmuch-el
-%{_emacs_sitelispdir}/*.el
 
 %files -n python-notmuch
 %doc bindings/python/README
 %{python_sitelib}/*
 
 %changelog
+* Fri Jul 13 2012 Karel Klíč <kklic@redhat.com> - 0.13.2-1
+- Update to the newest release
+- Merge emacs-notmuch-el into emacs-el to conform to the packaging
+  guidelines
+
 * Wed Mar  7 2012 Karel Klíč <kklic@redhat.com> - 0.11.1-1
 - Update to newest release, which fixes CVE-2011-1103
 

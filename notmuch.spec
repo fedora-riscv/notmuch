@@ -2,7 +2,7 @@
 
 Name: notmuch
 Version: 0.13.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -62,6 +62,7 @@ Summary: Notmuch (of a) helper for Mutt
 Group: Development/Libraries
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}
+Requires: perl(Term::ReadLine::Gnu)
 
 %description mutt
 notmuch-mutt provide integration among the Mutt mail user agent and
@@ -145,6 +146,9 @@ install contrib/notmuch-mutt/notmuch-mutt.1 %{buildroot}%{_mandir}/man1/notmuch-
 %{_mandir}/man1/notmuch-mutt.1*
 
 %changelog
+* Mon Sep 17 2012 Karel Klíč <kklic@redhat.com> - 0.13.2-4
+- notmuch-mutt requires perl(Term::Readline::Gnu)
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -2,7 +2,7 @@
 
 Name: notmuch
 Version: 0.13.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -146,6 +146,9 @@ install contrib/notmuch-mutt/notmuch-mutt.1 %{buildroot}%{_mandir}/man1/notmuch-
 %{_mandir}/man1/notmuch-mutt.1*
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13.2-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 0.13.2-6
 - Perl 5.18 rebuild
 

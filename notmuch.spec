@@ -1,8 +1,8 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name: notmuch
-Version: 0.13.2
-Release: 7%{?dist}
+Version: 0.16
+Release: 1%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -10,6 +10,7 @@ URL: http://notmuchmail.org/
 Source0: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
 BuildRequires: xapian-core-devel gmime-devel libtalloc-devel
 BuildRequires: zlib-devel emacs-el emacs-nox perl python2-devel
+BuildRequires: perl-podlators
 
 %description
 Fast system for indexing, searching, and tagging email.  Even if you
@@ -117,6 +118,7 @@ install contrib/notmuch-mutt/notmuch-mutt.1 %{buildroot}%{_mandir}/man1/notmuch-
 %{_mandir}/man1/notmuch-config.1*
 %{_mandir}/man1/notmuch-count.1*
 %{_mandir}/man1/notmuch-dump.1*
+%{_mandir}/man1/notmuch-insert.1*
 %{_mandir}/man1/notmuch-new.1*
 %{_mandir}/man1/notmuch-reply.1*
 %{_mandir}/man1/notmuch-restore.1*
@@ -146,6 +148,9 @@ install contrib/notmuch-mutt/notmuch-mutt.1 %{buildroot}%{_mandir}/man1/notmuch-
 %{_mandir}/man1/notmuch-mutt.1*
 
 %changelog
+* Fri Sep 27 2013 Lars Kellogg-Stedman <lars@redhat.com> - 0.16-1
+- Updated to notmuch 0.16.
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13.2-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

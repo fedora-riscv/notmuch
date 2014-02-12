@@ -2,7 +2,7 @@
 
 Name: notmuch
 Version: 0.16
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -11,6 +11,7 @@ Source0: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
 BuildRequires: xapian-core-devel gmime-devel libtalloc-devel
 BuildRequires: zlib-devel emacs-el emacs-nox perl python2-devel
 BuildRequires: perl-podlators
+BuildRequires: glib libtool
 
 %description
 Fast system for indexing, searching, and tagging email.  Even if you
@@ -69,6 +70,18 @@ Requires: perl(Term::ReadLine::Gnu)
 notmuch-mutt provide integration among the Mutt mail user agent and
 the Notmuch mail indexer.
 
+%package deliver
+Summary: A maildir delivery tool
+Group: Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: glib >= 2.16
+
+%description deliver
+notmuch-deliver is a maildir delivery tool for the notmuch mail indexer. It
+reads from standard input, delivers the mail to the specified maildir and adds
+it to the notmuch database. This is meant as a convenient alternative to
+running notmuch new after mail delivery.
+
 %prep
 %setup -q
 
@@ -90,6 +103,17 @@ pushd contrib/notmuch-mutt
     make
 popd
 
+# Build notmuch-deliver
+pushd contrib/notmuch-deliver
+    ./autogen.sh
+    LDFLAGS="-L$(pwd)/../../lib/" CPPFLAGS="-I$(pwd)/../../lib/" ./configure \
+       --prefix=%{_prefix} --sysconfdir=%{_sysconfdir} \
+       --libdir=%{_libdir} \
+       --includedir=%{_includedir} \
+       --mandir=%{_mandir}
+    make %{?_smp_mflags} CFLAGS="%{optflags}"
+popd
+
 %install
 make install DESTDIR=%{buildroot}
 
@@ -104,6 +128,11 @@ popd
 # Install notmuch-mutt
 install contrib/notmuch-mutt/notmuch-mutt %{buildroot}%{_bindir}/notmuch-mutt
 install contrib/notmuch-mutt/notmuch-mutt.1 %{buildroot}%{_mandir}/man1/notmuch-mutt.1
+
+# Install notmuch-deliver
+pushd contrib/notmuch-deliver
+    make install DESTDIR=%{buildroot}
+popd
 
 %post -p /sbin/ldconfig
 
@@ -147,7 +176,14 @@ install contrib/notmuch-mutt/notmuch-mutt.1 %{buildroot}%{_mandir}/man1/notmuch-
 %{_bindir}/notmuch-mutt
 %{_mandir}/man1/notmuch-mutt.1*
 
+%files deliver
+%{_bindir}/notmuch-deliver
+%{_datadir}/doc/notmuch-deliver/README.mkd
+
 %changelog
+* Wed Feb 12 2014 Ralph Bean <rbean@redhat.com> - 0.16-2
+- Added install of notmuch-deliver.
+
 * Fri Sep 27 2013 Lars Kellogg-Stedman <lars@redhat.com> - 0.16-1
 - Updated to notmuch 0.16.
 

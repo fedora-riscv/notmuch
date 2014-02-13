@@ -1,8 +1,8 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name: notmuch
-Version: 0.16
-Release: 2%{?dist}
+Version: 0.17
+Release: 1%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -155,6 +155,7 @@ popd
 %{_mandir}/man1/notmuch-setup.1*
 %{_mandir}/man1/notmuch-show.1*
 %{_mandir}/man1/notmuch-tag.1*
+%{_mandir}/man1/notmuch-compact.1*
 %{_mandir}/man5/notmuch*.5*
 %{_mandir}/man7/notmuch*.7*
 %{_libdir}/libnotmuch.so.3*
@@ -181,6 +182,9 @@ popd
 %{_datadir}/doc/notmuch-deliver/README.mkd
 
 %changelog
+* Thu Feb 13 2014 Ralph Bean <rbean@redhat.com> - 0.17-1
+- Latest upstream.
+
 * Wed Feb 12 2014 Ralph Bean <rbean@redhat.com> - 0.16-2
 - Added install of notmuch-deliver.
 

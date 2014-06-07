@@ -2,7 +2,7 @@
 
 Name: notmuch
 Version: 0.17
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -182,6 +182,9 @@ popd
 %{_datadir}/doc/notmuch-deliver/README.mkd
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.17-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Thu Feb 13 2014 Ralph Bean <rbean@redhat.com> - 0.17-1
 - Latest upstream.
 

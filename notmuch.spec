@@ -1,8 +1,8 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name: notmuch
-Version: 0.17
-Release: 2%{?dist}
+Version: 0.18.1
+Release: 1%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -182,6 +182,9 @@ popd
 %{_datadir}/doc/notmuch-deliver/README.mkd
 
 %changelog
+* Mon Jul 28 2014 Luke Macken <lmacken@redhat.com> - 0.18-1
+- Update to 0.18.1 (#1094701)
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.17-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

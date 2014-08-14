@@ -185,7 +185,10 @@ popd
 %{_datadir}/doc/notmuch-deliver/README.mkd
 
 %changelog
-* Mon Jul 28 2014 Luke Macken <lmacken@redhat.com> - 0.18-1
+* Wed Aug 13 2014 Luke Macken <lmacken@redhat.com> - 0.18.1-2
+- Add bash-completion, emacs, and python-docutils to the build requirements
+
+* Mon Jul 28 2014 Luke Macken <lmacken@redhat.com> - 0.18.1-1
 - Update to 0.18.1 (#1094701)
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.17-2

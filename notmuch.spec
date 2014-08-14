@@ -2,7 +2,7 @@
 
 Name: notmuch
 Version: 0.18.1
-Release: 1%{?dist}
+Release: 3%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+

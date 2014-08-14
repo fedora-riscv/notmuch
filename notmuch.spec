@@ -15,6 +15,7 @@ BuildRequires: glib libtool
 BuildRequires: bash-completion
 BuildRequires: python-docutils
 BuildRequires: emacs
+BuildRequires: ruby-devel
 
 %description
 Fast system for indexing, searching, and tagging email.  Even if you
@@ -62,6 +63,14 @@ Requires: %{name} = %{version}-%{release}
 %description -n python-notmuch
 %{summary}.
 
+%package -n ruby-notmuch
+Summary: Ruby bindings for notmuch
+Group: Development/Libraries
+Requires: %{name} = %{version}-%{release}
+
+%description -n ruby-notmuch
+%{summary}.
+
 %package mutt
 Summary: Notmuch (of a) helper for Mutt
 Group: Development/Libraries
@@ -101,6 +110,12 @@ pushd bindings/python
     python setup.py build
 popd
 
+# Build the ruby bindings
+pushd bindings/ruby
+    ruby extconf.rb --vendor --with-cflags="%{optflags}"
+    make %{?_smp_mflags}
+popd
+
 # Build notmuch-mutt
 pushd contrib/notmuch-mutt
     make
@@ -126,6 +141,11 @@ find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
 # Install the python bindings and documentation
 pushd bindings/python
     python setup.py install -O1 --skip-build --root %{buildroot}
+popd
+
+# Install the ruby bindings
+pushd bindings/ruby
+    make install DESTDIR=%{buildroot}
 popd
 
 # Install notmuch-mutt
@@ -176,6 +196,9 @@ popd
 %doc bindings/python/README
 %{python_sitelib}/*
 
+%files -n ruby-notmuch
+%{ruby_vendorarchdir}/*
+
 %files mutt
 %{_bindir}/notmuch-mutt
 %{_mandir}/man1/notmuch-mutt.1*
@@ -185,6 +208,9 @@ popd
 %{_datadir}/doc/notmuch-deliver/README.mkd
 
 %changelog
+* Wed Aug 13 2014 Luke Macken <lmacken@redhat.com> - 0.18.1-3
+- Build a ruby-notmuch subpackage (#947571)
+
 * Wed Aug 13 2014 Luke Macken <lmacken@redhat.com> - 0.18.1-2
 - Add bash-completion, emacs, and python-docutils to the build requirements
 

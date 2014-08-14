@@ -13,6 +13,7 @@ BuildRequires: zlib-devel emacs-el emacs-nox perl python2-devel
 BuildRequires: perl-podlators
 BuildRequires: glib libtool
 BuildRequires: bash-completion
+BuildRequires: python-docutils
 
 %description
 Fast system for indexing, searching, and tagging email.  Even if you

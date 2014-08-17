@@ -2,7 +2,7 @@
 
 Name: notmuch
 Version: 0.18.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
@@ -208,6 +208,9 @@ popd
 %{_datadir}/doc/notmuch-deliver/README.mkd
 
 %changelog
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Wed Aug 13 2014 Luke Macken <lmacken@redhat.com> - 0.18.1-3
 - Build a ruby-notmuch subpackage (#947571)
 

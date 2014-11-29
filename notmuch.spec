@@ -103,6 +103,20 @@ reads from standard input, delivers the mail to the specified maildir and adds
 it to the notmuch database. This is meant as a convenient alternative to
 running notmuch new after mail delivery.
 
+%package    vim
+Summary:    A Vim plugin for notmuch
+Group:      Applications/Editors
+Requires:   %{name} = %{version}-%{release}
+Requires:   rubygem-mail
+Requires:   vim-enhanced
+# Required for updating helptags in scriptlets.
+Requires(post):    vim-enhanced
+Requires(postun):  vim-enhanced
+
+%description vim
+notmuch-vim is a Vim plugin that provides a fully usable mail client
+interface, utilizing the notmuch framework.
+
 %prep
 %setup -q
 
@@ -166,9 +180,22 @@ pushd contrib/notmuch-deliver
     make install DESTDIR=%{buildroot}
 popd
 
+# Install notmuch-vim
+pushd vim
+    make install DESTDIR=%{buildroot} prefix="%{_datadir}/vim/vimfiles"
+popd
+
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
+
+%post vim
+cd %{_datadir}/vim/vimfiles/doc
+vim -u NONE -esX -c "helptags ." -c quit
+
+%postun vim
+cd %{_datadir}/vim/vimfiles/doc
+vim -u NONE -esX -c "helptags ." -c quit
 
 %files
 %doc AUTHORS COPYING COPYING-GPL-3 INSTALL README
@@ -217,9 +244,19 @@ popd
 %{_bindir}/notmuch-deliver
 %{_datadir}/doc/notmuch-deliver/README.mkd
 
+%files vim
+%{_datadir}/vim/vimfiles/doc/notmuch.txt
+%{_datadir}/vim/vimfiles/plugin/notmuch.vim
+%{_datadir}/vim/vimfiles/syntax/notmuch-compose.vim
+%{_datadir}/vim/vimfiles/syntax/notmuch-folders.vim
+%{_datadir}/vim/vimfiles/syntax/notmuch-git-diff.vim
+%{_datadir}/vim/vimfiles/syntax/notmuch-search.vim
+%{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
+
 %changelog
 * Sat Nov 29 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.19-1
 - update to upstream release 0.19
+- add notmuch-vim subpackage
 
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild

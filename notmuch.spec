@@ -1,23 +1,29 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-Name: notmuch
-Version: 0.19
-Release: 1%{?dist}
-Summary: System for indexing, searching, and tagging email
-Group: Applications/Internet
-License: GPLv3+
-URL: http://notmuchmail.org/
-Source0: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
-Source1: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz.sha1
-Source2: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz.sha1.asc
-BuildRequires: xapian-core-devel gmime-devel libtalloc-devel
-BuildRequires: zlib-devel emacs-el emacs-nox perl python2-devel
-BuildRequires: perl-podlators
-BuildRequires: glib libtool
-BuildRequires: bash-completion
-BuildRequires: python-docutils
-BuildRequires: emacs
-BuildRequires: ruby-devel
+Name:           notmuch
+Version:        0.19
+Release:        1%{?dist}
+Summary:        System for indexing, searching, and tagging email
+Group:          Applications/Internet
+License:        GPLv3+
+URL:            http://notmuchmail.org/
+Source0:        http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
+Source1:        http://notmuchmail.org/releases/notmuch-%{version}.tar.gz.sha1
+Source2:        http://notmuchmail.org/releases/notmuch-%{version}.tar.gz.sha1.asc
+BuildRequires:  bash-completion
+BuildRequires:  emacs
+BuildRequires:  emacs-el
+BuildRequires:  emacs-nox
+BuildRequires:  glib libtool
+BuildRequires:  gmime-devel
+BuildRequires:  libtalloc-devel
+BuildRequires:  perl
+BuildRequires:  perl-podlators
+BuildRequires:  python-docutils
+BuildRequires:  python2-devel
+BuildRequires:  ruby-devel
+BuildRequires:  xapian-core-devel
+BuildRequires:  zlib-devel
 
 %description
 Fast system for indexing, searching, and tagging email.  Even if you
@@ -32,10 +38,10 @@ work is provided by an external library, Xapian. So if Notmuch
 provides no user interface and Xapian does all the heavy lifting, then
 what's left here? Not much.
 
-%package devel
-Summary: Development libraries and header files for the Notmuch library
-Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+%package    devel
+Summary:    Development libraries and header files for the Notmuch library
+Group:      Development/Libraries
+Requires:   %{name} = %{version}-%{release}
 
 %description devel
 Notmuch-devel contains the development libraries and header files for
@@ -46,49 +52,50 @@ Install notmuch-devel if you are developing C programs which will use the
 Notmuch library.  You'll also need to install the notmuch package.
 
 %package -n emacs-notmuch
-Summary: Not much support for Emacs
-Group: Applications/Editors
-BuildArch: noarch
-Requires: %{name} = %{version}-%{release}, emacs(bin) >= %{_emacs_version}
-Obsoletes: emacs-notmuch-el < 0.11.1-2
-Provides: emacs-notmuch-el < 0.11.1-2
+Summary:    Not much support for Emacs
+Group:      Applications/Editors
+BuildArch:  noarch
+Requires:   %{name} = %{version}-%{release}
+Requires:   emacs(bin) >= %{_emacs_version}
+Obsoletes:  emacs-notmuch-el < 0.11.1-2
+Provides:   emacs-notmuch-el < 0.11.1-2
 
 %description -n emacs-notmuch
 %{summary}.
 
 %package -n python-notmuch
-Summary: Python bindings for notmuch
-Group: Development/Libraries
-BuildArch: noarch
-Requires: %{name} = %{version}-%{release}
+Summary:    Python bindings for notmuch
+Group:      Development/Libraries
+BuildArch:  noarch
+Requires:   %{name} = %{version}-%{release}
 
 %description -n python-notmuch
 %{summary}.
 
 %package -n ruby-notmuch
-Summary: Ruby bindings for notmuch
-Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Summary:    Ruby bindings for notmuch
+Group:      Development/Libraries
+Requires:   %{name} = %{version}-%{release}
 
 %description -n ruby-notmuch
 %{summary}.
 
-%package mutt
-Summary: Notmuch (of a) helper for Mutt
-Group: Development/Libraries
-BuildArch: noarch
-Requires: %{name} = %{version}-%{release}
-Requires: perl(Term::ReadLine::Gnu)
+%package    mutt
+Summary:    Notmuch (of a) helper for Mutt
+Group:      Development/Libraries
+BuildArch:  noarch
+Requires:   %{name} = %{version}-%{release}
+Requires:   perl(Term::ReadLine::Gnu)
 
 %description mutt
 notmuch-mutt provide integration among the Mutt mail user agent and
 the Notmuch mail indexer.
 
-%package deliver
-Summary: A maildir delivery tool
-Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
-Requires: glib >= 2.16
+%package    deliver
+Summary:    A maildir delivery tool
+Group:      Development/Libraries
+Requires:   %{name} = %{version}-%{release}
+Requires:   glib >= 2.16
 
 %description deliver
 notmuch-deliver is a maildir delivery tool for the notmuch mail indexer. It

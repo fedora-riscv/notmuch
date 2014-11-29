@@ -1,13 +1,15 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name: notmuch
-Version: 0.18.1
-Release: 4%{?dist}
+Version: 0.19
+Release: 1%{?dist}
 Summary: System for indexing, searching, and tagging email
 Group: Applications/Internet
 License: GPLv3+
 URL: http://notmuchmail.org/
 Source0: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
+Source1: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz.sha1
+Source2: http://notmuchmail.org/releases/notmuch-%{version}.tar.gz.sha1.asc
 BuildRequires: xapian-core-devel gmime-devel libtalloc-devel
 BuildRequires: zlib-devel emacs-el emacs-nox perl python2-devel
 BuildRequires: perl-podlators
@@ -167,6 +169,7 @@ popd
 %{_datadir}/zsh/functions/Completion/Unix/_notmuch
 %{_bindir}/notmuch
 %{_mandir}/man1/notmuch.1*
+%{_mandir}/man1/notmuch-address.1*
 %{_mandir}/man1/notmuch-config.1*
 %{_mandir}/man1/notmuch-count.1*
 %{_mandir}/man1/notmuch-dump.1*
@@ -181,7 +184,7 @@ popd
 %{_mandir}/man1/notmuch-compact.1*
 %{_mandir}/man5/notmuch*.5*
 %{_mandir}/man7/notmuch*.7*
-%{_libdir}/libnotmuch.so.3*
+%{_libdir}/libnotmuch.so.4*
 
 %files devel
 %{_libdir}/libnotmuch.so
@@ -208,6 +211,9 @@ popd
 %{_datadir}/doc/notmuch-deliver/README.mkd
 
 %changelog
+* Sat Nov 29 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.19-1
+- update to upstream release 0.19
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

@@ -57,8 +57,6 @@ Group:      Applications/Editors
 BuildArch:  noarch
 Requires:   %{name} = %{version}-%{release}
 Requires:   emacs(bin) >= %{_emacs_version}
-Obsoletes:  emacs-notmuch-el < 0.11.1-2
-Provides:   emacs-notmuch-el < 0.11.1-2
 
 %description -n emacs-notmuch
 %{summary}.
@@ -257,6 +255,8 @@ vim -u NONE -esX -c "helptags ." -c quit
 * Sat Nov 29 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.19-1
 - update to upstream release 0.19
 - add notmuch-vim subpackage
+- fix "self-obsoletion" due to incorrect Provides for emacs-notmuch subpackage
+  (and we can remove both Obsoletes and Provides anyway as no longer relevant)
 
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild

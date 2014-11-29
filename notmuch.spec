@@ -1,4 +1,8 @@
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%if 0%{?rhel} && 0%{?rhel} <= 6
+%{!?__python2: %global __python2 /usr/bin/python2}
+%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
+%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
+%endif
 
 Name:           notmuch
 Version:        0.19
@@ -170,8 +174,10 @@ pushd bindings/ruby
 popd
 
 # Install notmuch-mutt
-install contrib/notmuch-mutt/notmuch-mutt %{buildroot}%{_bindir}/notmuch-mutt
-install contrib/notmuch-mutt/notmuch-mutt.1 %{buildroot}%{_mandir}/man1/notmuch-mutt.1
+install -m0755 contrib/notmuch-mutt/notmuch-mutt \
+    %{buildroot}%{_bindir}/notmuch-mutt
+install -m0644 contrib/notmuch-mutt/notmuch-mutt.1 \
+    %{buildroot}%{_mandir}/man1/notmuch-mutt.1
 
 # Install notmuch-deliver
 pushd contrib/notmuch-deliver
@@ -196,8 +202,8 @@ cd %{_datadir}/vim/vimfiles/doc
 vim -u NONE -esX -c "helptags ." -c quit
 
 %files
-%doc AUTHORS COPYING COPYING-GPL-3 INSTALL README
-%{_sysconfdir}/bash_completion.d/notmuch
+%doc AUTHORS COPYING COPYING-GPL-3 README
+%config(noreplace) %{_sysconfdir}/bash_completion.d/notmuch
 %{_datadir}/zsh/functions/Completion/Unix/_notmuch
 %{_bindir}/notmuch
 %{_mandir}/man1/notmuch.1*
@@ -257,6 +263,10 @@ vim -u NONE -esX -c "helptags ." -c quit
 - add notmuch-vim subpackage
 - fix "self-obsoletion" due to incorrect Provides for emacs-notmuch subpackage
   (and we can remove both Obsoletes and Provides anyway as no longer relevant)
+- fix "non-conffile-in-etc /etc/bash_completion.d/notmuch"
+- fix "install-file-in-docs /usr/share/doc/notmuch/INSTALL"
+- fix "spurious-executable-perm /usr/share/man/man1/notmuch-mutt.1.gz"
+- {__python} is deprecated
 
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild

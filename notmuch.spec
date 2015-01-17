@@ -6,7 +6,7 @@
 
 Name:           notmuch
 Version:        0.19
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
@@ -258,6 +258,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Sat Jan 17 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 0.19-2
+- Rebuild for https://fedoraproject.org/wiki/Changes/Ruby_2.2
+
 * Sat Nov 29 2014 Jamie Nguyen <jamielinux@fedoraproject.org> - 0.19-1
 - update to upstream release 0.19
 - add notmuch-vim subpackage

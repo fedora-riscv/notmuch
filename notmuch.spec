@@ -5,8 +5,8 @@
 %endif
 
 Name:           notmuch
-Version:        0.19
-Release:        4%{?dist}
+Version:        0.20.2
+Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
@@ -14,6 +14,11 @@ URL:            http://notmuchmail.org/
 Source0:        http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
 Source1:        http://notmuchmail.org/releases/notmuch-%{version}.tar.gz.sha1
 Source2:        http://notmuchmail.org/releases/notmuch-%{version}.tar.gz.sha1.asc
+
+# These should be removed in Fedora 26
+Obsoletes:      notmuch-deliver < 0.19-5
+Provides:       notmuch-deliver >= 0.19-5
+
 BuildRequires:  bash-completion
 BuildRequires:  emacs
 BuildRequires:  emacs-el
@@ -25,6 +30,7 @@ BuildRequires:  perl
 BuildRequires:  perl-podlators
 BuildRequires:  python-docutils
 BuildRequires:  python2-devel
+BuildRequires:  python-sphinx
 BuildRequires:  ruby-devel
 BuildRequires:  xapian-core-devel
 BuildRequires:  zlib-devel
@@ -93,18 +99,6 @@ Requires:   perl(Term::ReadLine::Gnu)
 notmuch-mutt provide integration among the Mutt mail user agent and
 the Notmuch mail indexer.
 
-%package    deliver
-Summary:    A maildir delivery tool
-Group:      Development/Libraries
-Requires:   %{name} = %{version}-%{release}
-Requires:   glib >= 2.16
-
-%description deliver
-notmuch-deliver is a maildir delivery tool for the notmuch mail indexer. It
-reads from standard input, delivers the mail to the specified maildir and adds
-it to the notmuch database. This is meant as a convenient alternative to
-running notmuch new after mail delivery.
-
 %package    vim
 Summary:    A Vim plugin for notmuch
 Group:      Applications/Editors
@@ -146,17 +140,6 @@ pushd contrib/notmuch-mutt
     make
 popd
 
-# Build notmuch-deliver
-pushd contrib/notmuch-deliver
-    ./autogen.sh
-    LDFLAGS="-L$(pwd)/../../lib/" CPPFLAGS="-I$(pwd)/../../lib/" ./configure \
-       --prefix=%{_prefix} --sysconfdir=%{_sysconfdir} \
-       --libdir=%{_libdir} \
-       --includedir=%{_includedir} \
-       --mandir=%{_mandir}
-    make %{?_smp_mflags} CFLAGS="%{optflags}"
-popd
-
 %install
 make install DESTDIR=%{buildroot}
 
@@ -179,15 +162,12 @@ install -m0755 contrib/notmuch-mutt/notmuch-mutt \
 install -m0644 contrib/notmuch-mutt/notmuch-mutt.1 \
     %{buildroot}%{_mandir}/man1/notmuch-mutt.1
 
-# Install notmuch-deliver
-pushd contrib/notmuch-deliver
-    make install DESTDIR=%{buildroot}
-popd
-
 # Install notmuch-vim
 pushd vim
     make install DESTDIR=%{buildroot} prefix="%{_datadir}/vim/vimfiles"
 popd
+
+ls -lR %{buildroot}%{_mandir}
 
 %post -p /sbin/ldconfig
 
@@ -232,6 +212,7 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_emacs_sitelispdir}/*.el
 %{_emacs_sitelispdir}/*.elc
 %{_emacs_sitelispdir}/notmuch-logo.png
+%{_mandir}/man1/notmuch-emacs-mua.1*
 
 %files -n python-notmuch
 %doc bindings/python/README
@@ -244,10 +225,6 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_bindir}/notmuch-mutt
 %{_mandir}/man1/notmuch-mutt.1*
 
-%files deliver
-%{_bindir}/notmuch-deliver
-%{_datadir}/doc/notmuch-deliver/README.mkd
-
 %files vim
 %{_datadir}/vim/vimfiles/doc/notmuch.txt
 %{_datadir}/vim/vimfiles/plugin/notmuch.vim
@@ -258,6 +235,11 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Wed Sep 16 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.20.2-1
+- Update to 0.20.2
+- No longer build notmuch-deliver (no longer shipped upstream)
+- Add python-sphinx to BuildRequires so man pages are built
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.19-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

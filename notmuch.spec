@@ -5,15 +5,13 @@
 %endif
 
 Name:           notmuch
-Version:        0.20.2
+Version:        0.21
 Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
 URL:            http://notmuchmail.org/
 Source0:        http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
-Source1:        http://notmuchmail.org/releases/notmuch-%{version}.tar.gz.sha1
-Source2:        http://notmuchmail.org/releases/notmuch-%{version}.tar.gz.sha1.asc
 
 # These should be removed in Fedora 26
 Obsoletes:      notmuch-deliver < 0.19-5
@@ -122,17 +120,11 @@ interface, utilizing the notmuch framework.
 ./configure --prefix=%{_prefix} --sysconfdir=%{_sysconfdir} \
    --libdir=%{_libdir} --mandir=%{_mandir} --includedir=%{_includedir} \
    --emacslispdir=%{_emacs_sitelispdir}
-make %{?_smp_mflags} CFLAGS="%{optflags}"
+make %{?_smp_mflags} CFLAGS="%{optflags} -fPIC"
 
 # Build the python bindings
 pushd bindings/python
     python setup.py build
-popd
-
-# Build the ruby bindings
-pushd bindings/ruby
-    ruby extconf.rb --vendor --with-cflags="%{optflags}"
-    make %{?_smp_mflags}
 popd
 
 # Build notmuch-mutt
@@ -235,6 +227,12 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Fri Nov 27 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.21-1
+- Update to 0.21
+- Remove sha1 files - unused
+- Ruby bindings are now built by default, so don't build them explicitly (thanks Jan Synáček)
+- Add -fPIC to compiler flags
+
 * Wed Sep 16 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.20.2-1
 - Update to 0.20.2
 - No longer build notmuch-deliver (no longer shipped upstream)

@@ -6,7 +6,7 @@
 
 Name:           notmuch
 Version:        0.21
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
@@ -227,6 +227,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Tue Jan 12 2016 Vít Ondruch <vondruch@redhat.com> - 0.21-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.3
+
 * Fri Nov 27 2015 Jonathan Underwood <jonathan.underwood@gmail.com> - 0.21-1
 - Update to 0.21
 - Remove sha1 files - unused

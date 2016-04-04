@@ -1,3 +1,7 @@
+%if 0%{?fedora}
+%global with_python3 1
+%endif
+
 %if 0%{?rhel} && 0%{?rhel} <= 6
 %{!?__python2: %global __python2 /usr/bin/python2}
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
@@ -26,12 +30,18 @@ BuildRequires:  gmime-devel
 BuildRequires:  libtalloc-devel
 BuildRequires:  perl
 BuildRequires:  perl-podlators
-BuildRequires:  python-docutils
 BuildRequires:  python2-devel
+BuildRequires:  python-docutils
 BuildRequires:  python-sphinx
 BuildRequires:  ruby-devel
 BuildRequires:  xapian-core-devel
 BuildRequires:  zlib-devel
+
+%if 0%{?with_python3}
+BuildRequires:  python3-devel
+BuildRequires:  python3-docutils
+BuildRequires:  python3-sphinx
+%endif
 
 %description
 Fast system for indexing, searching, and tagging email.  Even if you
@@ -69,14 +79,25 @@ Requires:   emacs(bin) >= %{_emacs_version}
 %description -n emacs-notmuch
 %{summary}.
 
-%package -n python-notmuch
-Summary:    Python bindings for notmuch
-Group:      Development/Libraries
-BuildArch:  noarch
-Requires:   %{name} = %{version}-%{release}
+%package -n python2-notmuch
+Summary:    Python2 bindings for notmuch
+%{?python_provide:%python_provide python2-notmuch}
 
-%description -n python-notmuch
+Requires:       python2
+
+%description -n python2-notmuch
 %{summary}.
+
+%if 0%{?with_python3}
+%package -n python3-notmuch
+Summary:    Python3 bindings for notmuch
+%{?python_provide:%python_provide python3-notmuch}
+
+Requires:       python3
+
+%description -n python3-notmuch
+%{summary}.
+%endif
 
 %package -n ruby-notmuch
 Summary:    Ruby bindings for notmuch
@@ -124,7 +145,10 @@ make %{?_smp_mflags} CFLAGS="%{optflags} -fPIC"
 
 # Build the python bindings
 pushd bindings/python
-    python setup.py build
+    %py2_build
+    %if 0%{?with_python3}
+    %py3_build
+    %endif
 popd
 
 # Build notmuch-mutt
@@ -140,7 +164,10 @@ find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
 
 # Install the python bindings and documentation
 pushd bindings/python
-    python setup.py install -O1 --skip-build --root %{buildroot}
+    %py2_install
+    %if 0%{?with_python3}
+    %py3_install
+    %endif
 popd
 
 # Install the ruby bindings
@@ -206,9 +233,13 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_emacs_sitelispdir}/notmuch-logo.png
 %{_mandir}/man1/notmuch-emacs-mua.1*
 
-%files -n python-notmuch
+%files -n python2-notmuch
 %doc bindings/python/README
-%{python_sitelib}/*
+%{python2_sitelib}/notmuch*
+
+%files -n python3-notmuch
+%doc bindings/python/README
+%{python3_sitelib}/notmuch*
 
 %files -n ruby-notmuch
 %{ruby_vendorarchdir}/*
@@ -227,6 +258,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Mon Apr 04 2016 Ralph Bean <rbean@redhat.com> - 0.21-4
+- Modernized python macros and added a python3 subpackage.
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.21-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 

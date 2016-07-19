@@ -10,7 +10,7 @@
 
 Name:           notmuch
 Version:        0.21
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
@@ -259,6 +259,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.21-5
+- https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+
 * Mon Apr 04 2016 Ralph Bean <rbean@redhat.com> - 0.21-4
 - Modernized python macros and added a python3 subpackage.
 

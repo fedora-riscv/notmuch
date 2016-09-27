@@ -10,7 +10,7 @@
 
 Name:           notmuch
 Version:        0.21
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
@@ -238,9 +238,11 @@ vim -u NONE -esX -c "helptags ." -c quit
 %doc bindings/python/README
 %{python2_sitelib}/notmuch*
 
+%if 0%{?with_python3}
 %files -n python3-notmuch
 %doc bindings/python/README
 %{python3_sitelib}/notmuch*
+%endif
 
 %files -n ruby-notmuch
 %{ruby_vendorarchdir}/*
@@ -259,6 +261,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Tue Sep 27 2016 Ralph Bean <rbean@redhat.com> - 0.21-6
+- Fixed python3 conditional in the files section.
+
 * Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.21-5
 - https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
 

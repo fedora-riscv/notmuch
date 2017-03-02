@@ -9,7 +9,7 @@
 %endif
 
 Name:           notmuch
-Version:        0.23.6
+Version:        0.23.7
 Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
@@ -261,6 +261,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Thu Mar 02 2017 Ralph Bean <rbean@redhat.com> - 0.23.7-1
+- new version
+
 * Tue Feb 28 2017 Ralph Bean <rbean@redhat.com> - 0.23.6-1
 - new version
 

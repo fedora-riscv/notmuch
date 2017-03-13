@@ -9,7 +9,7 @@
 %endif
 
 Name:           notmuch
-Version:        0.23.7
+Version:        0.24
 Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
@@ -187,6 +187,8 @@ pushd vim
     make install DESTDIR=%{buildroot} prefix="%{_datadir}/vim/vimfiles"
 popd
 
+rm -f %{buildroot}/%{_datadir}/applications/mimeinfo.cache
+
 ls -lR %{buildroot}%{_mandir}
 
 %post -p /sbin/ldconfig
@@ -233,6 +235,8 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_emacs_sitelispdir}/*.elc
 %{_emacs_sitelispdir}/notmuch-logo.png
 %{_mandir}/man1/notmuch-emacs-mua.1*
+%{_bindir}/notmuch-emacs-mua
+%{_datadir}/applications/notmuch-emacs-mua.desktop
 
 %files -n python2-notmuch
 %doc bindings/python/README
@@ -261,6 +265,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Mon Mar 13 2017 Ralph Bean <rbean@redhat.com> - 0.24-1
+- new version
+
 * Thu Mar 02 2017 Ralph Bean <rbean@redhat.com> - 0.23.7-1
 - new version
 

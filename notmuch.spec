@@ -28,7 +28,7 @@ BuildRequires:  emacs-nox
 BuildRequires:  glib libtool
 BuildRequires:  gmime-devel
 BuildRequires:  libtalloc-devel
-BuildRequires:  perl
+BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
 BuildRequires:  perl-podlators
 BuildRequires:  python2-devel

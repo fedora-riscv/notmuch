@@ -9,8 +9,8 @@
 %endif
 
 Name:           notmuch
-Version:        0.24.2
-Release:        3%{?dist}
+Version:        0.25
+Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
@@ -205,8 +205,8 @@ vim -u NONE -esX -c "helptags ." -c quit
 
 %files
 %doc AUTHORS COPYING COPYING-GPL-3 README
-%config(noreplace) %{_sysconfdir}/bash_completion.d/notmuch
 %{_datadir}/zsh/functions/Completion/Unix/_notmuch
+%{_datadir}/bash-completion/completions/notmuch
 %{_bindir}/notmuch
 %{_mandir}/man1/notmuch.1*
 %{_mandir}/man1/notmuch-address.1*
@@ -224,7 +224,7 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_mandir}/man1/notmuch-compact.1*
 %{_mandir}/man5/notmuch*.5*
 %{_mandir}/man7/notmuch*.7*
-%{_libdir}/libnotmuch.so.4*
+%{_libdir}/libnotmuch.so.5*
 
 %files devel
 %{_libdir}/libnotmuch.so
@@ -265,6 +265,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Mon Aug 21 2017 Gonéri Le Bouder <goneri@redhat.com> - 0.25-0
+- new upstream version
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 0.24.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 

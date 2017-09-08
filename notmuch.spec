@@ -10,7 +10,7 @@
 
 Name:           notmuch
 Version:        0.25
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
@@ -26,7 +26,11 @@ BuildRequires:  emacs
 BuildRequires:  emacs-el
 BuildRequires:  emacs-nox
 BuildRequires:  glib libtool
+%if 0%{?fedora} >= 27
+BuildRequires:  gmime30-devel
+%else
 BuildRequires:  gmime-devel
+%endif
 BuildRequires:  libtalloc-devel
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
@@ -265,6 +269,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Fri Sep 08 2017 Kalev Lember <klember@redhat.com> - 0.25-2
+- Switch to gmime 3.0 on F27+
+
 * Mon Aug 21 2017 Gonéri Le Bouder <goneri@redhat.com> - 0.25-0
 - new upstream version
 

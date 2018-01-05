@@ -10,7 +10,7 @@
 
 Name:           notmuch
 Version:        0.25
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
@@ -269,6 +269,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Fri Jan 05 2018 Mamoru TASAKA <mtasaka@fedoraproject.org> - 0.25-3
+- F-28: rebuild for ruby25
+
 * Fri Sep 08 2017 Kalev Lember <klember@redhat.com> - 0.25-2
 - Switch to gmime 3.0 on F27+
 

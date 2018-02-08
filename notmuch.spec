@@ -10,7 +10,7 @@
 
 Name:           notmuch
 Version:        0.25
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
@@ -36,8 +36,8 @@ BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
 BuildRequires:  perl-podlators
 BuildRequires:  python2-devel
-BuildRequires:  python-docutils
-BuildRequires:  python-sphinx
+BuildRequires:  python2-docutils
+BuildRequires:  python2-sphinx
 BuildRequires:  ruby-devel
 BuildRequires:  xapian-core-devel
 BuildRequires:  zlib-devel
@@ -269,6 +269,10 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Thu Feb 08 2018 Iryna Shcherbina <ishcherb@redhat.com> - 0.25-6
+- Update Python 2 dependency declarations to new packaging standards
+  (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
+
 * Thu Feb 08 2018 Fedora Release Engineering <releng@fedoraproject.org> - 0.25-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 

@@ -9,13 +9,13 @@
 %endif
 
 Name:           notmuch
-Version:        0.25
-Release:        6%{?dist}
+Version:        0.26.2
+Release:        0%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
-URL:            http://notmuchmail.org/
-Source0:        http://notmuchmail.org/releases/notmuch-%{version}.tar.gz
+URL:            https://notmuchmail.org/
+Source0:        https://notmuchmail.org/releases/notmuch-%{version}.tar.gz
 
 # These should be removed in Fedora 26
 Obsoletes:      notmuch-deliver < 0.19-5
@@ -219,6 +219,7 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_mandir}/man1/notmuch-dump.1*
 %{_mandir}/man1/notmuch-insert.1*
 %{_mandir}/man1/notmuch-new.1*
+%{_mandir}/man1/notmuch-reindex.1*
 %{_mandir}/man1/notmuch-reply.1*
 %{_mandir}/man1/notmuch-restore.1*
 %{_mandir}/man1/notmuch-search.1*
@@ -269,6 +270,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Sat May 26 2018 Dan Čermák <dan.cermak@cgc-instruments.com> - 0.26.2-0
+- new upstream version
+
 * Thu Feb 08 2018 Iryna Shcherbina <ishcherb@redhat.com> - 0.25-6
 - Update Python 2 dependency declarations to new packaging standards
   (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)

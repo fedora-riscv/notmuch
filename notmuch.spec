@@ -10,7 +10,7 @@
 
 Name:           notmuch
 Version:        0.27
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        System for indexing, searching, and tagging email
 Group:          Applications/Internet
 License:        GPLv3+
@@ -25,6 +25,7 @@ BuildRequires:  bash-completion
 BuildRequires:  emacs
 BuildRequires:  emacs-el
 BuildRequires:  emacs-nox
+Buildrequires:  gcc gcc-c++
 BuildRequires:  glib libtool
 %if 0%{?fedora} >= 27
 BuildRequires:  gmime30-devel
@@ -270,6 +271,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Mon Jul 16 2018 Michael J Gruber <mjg@fedoraproject.org> - 0.27-4
+- BR gcc gcc-c++
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 0.27-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 

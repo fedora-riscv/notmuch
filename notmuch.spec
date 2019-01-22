@@ -196,9 +196,7 @@ rm -f %{buildroot}/%{_datadir}/applications/mimeinfo.cache
 
 ls -lR %{buildroot}%{_mandir}
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 %post vim
 cd %{_datadir}/vim/vimfiles/doc

@@ -12,7 +12,6 @@ Name:           notmuch
 Version:        0.27
 Release:        5%{?dist}
 Summary:        System for indexing, searching, and tagging email
-Group:          Applications/Internet
 License:        GPLv3+
 URL:            https://notmuchmail.org/
 Source0:        https://notmuchmail.org/releases/notmuch-%{version}.tar.gz
@@ -64,7 +63,6 @@ what's left here? Not much.
 
 %package    devel
 Summary:    Development libraries and header files for the Notmuch library
-Group:      Development/Libraries
 Requires:   %{name} = %{version}-%{release}
 
 %description devel
@@ -77,7 +75,6 @@ Notmuch library.  You'll also need to install the notmuch package.
 
 %package -n emacs-notmuch
 Summary:    Not much support for Emacs
-Group:      Applications/Editors
 BuildArch:  noarch
 Requires:   %{name} = %{version}-%{release}
 Requires:   emacs(bin) >= %{_emacs_version}
@@ -107,7 +104,6 @@ Requires:       python3
 
 %package -n ruby-notmuch
 Summary:    Ruby bindings for notmuch
-Group:      Development/Libraries
 Requires:   %{name} = %{version}-%{release}
 
 %description -n ruby-notmuch
@@ -115,7 +111,6 @@ Requires:   %{name} = %{version}-%{release}
 
 %package    mutt
 Summary:    Notmuch (of a) helper for Mutt
-Group:      Development/Libraries
 BuildArch:  noarch
 Requires:   %{name} = %{version}-%{release}
 Requires:   perl(Term::ReadLine::Gnu)
@@ -126,7 +121,6 @@ the Notmuch mail indexer.
 
 %package    vim
 Summary:    A Vim plugin for notmuch
-Group:      Applications/Editors
 Requires:   %{name} = %{version}-%{release}
 Requires:   rubygem-mail
 Requires:   vim-enhanced

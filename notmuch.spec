@@ -2,6 +2,14 @@
 %global with_python3 1
 %endif
 
+%if 0%{?fedora} <= 29
+%global with_python2 1
+%endif
+
+%if 0%{?rhel} && 0%{?rhel} <= 7
+%global with_python2 1
+%endif
+
 %if 0%{?rhel} && 0%{?rhel} <= 6
 %{!?__python2: %global __python2 /usr/bin/python2}
 %{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
@@ -10,7 +18,7 @@
 
 Name:           notmuch
 Version:        0.27
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -35,9 +43,11 @@ BuildRequires:  libtalloc-devel
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
 BuildRequires:  perl-podlators
+%if 0%{?with_python2}
 BuildRequires:  python2-devel
 BuildRequires:  python2-docutils
 BuildRequires:  python2-sphinx
+%endif
 BuildRequires:  ruby-devel
 BuildRequires:  xapian-core-devel
 BuildRequires:  zlib-devel
@@ -82,6 +92,7 @@ Requires:   emacs(bin) >= %{_emacs_version}
 %description -n emacs-notmuch
 %{summary}.
 
+%if 0%{?with_python2}
 %package -n python2-notmuch
 Summary:    Python2 bindings for notmuch
 %{?python_provide:%python_provide python2-notmuch}
@@ -90,6 +101,7 @@ Requires:       python2
 
 %description -n python2-notmuch
 %{summary}.
+%endif
 
 %if 0%{?with_python3}
 %package -n python3-notmuch
@@ -145,7 +157,9 @@ make %{?_smp_mflags} CFLAGS="%{optflags} -fPIC"
 
 # Build the python bindings
 pushd bindings/python
+    %if 0%{?with_python2}
     %py2_build
+    %endif
     %if 0%{?with_python3}
     %py3_build
     %endif
@@ -164,7 +178,9 @@ find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
 
 # Install the python bindings and documentation
 pushd bindings/python
+    %if 0%{?with_python2}
     %py2_install
+    %endif
     %if 0%{?with_python3}
     %py3_install
     %endif
@@ -236,9 +252,11 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_bindir}/notmuch-emacs-mua
 %{_datadir}/applications/notmuch-emacs-mua.desktop
 
+%if 0%{?with_python2}
 %files -n python2-notmuch
 %doc bindings/python/README
 %{python2_sitelib}/notmuch*
+%endif
 
 %if 0%{?with_python3}
 %files -n python3-notmuch
@@ -263,6 +281,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Tue Feb 05 2019 Michael J Gruber <mjg@fedoraproject.org> - 0.27-7
+- Switch to python3 only for Fedora 30 and above
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 0.27-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 

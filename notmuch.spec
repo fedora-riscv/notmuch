@@ -17,8 +17,8 @@
 %endif
 
 Name:           notmuch
-Version:        0.27
-Release:        7%{?dist}
+Version:        0.28.1
+Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -219,6 +219,7 @@ vim -u NONE -esX -c "helptags ." -c quit
 %files
 %doc AUTHORS COPYING COPYING-GPL-3 README
 %{_datadir}/zsh/functions/Completion/Unix/_notmuch
+%{_datadir}/zsh/functions/Completion/Unix/_email-notmuch
 %{_datadir}/bash-completion/completions/notmuch
 %{_bindir}/notmuch
 %{_mandir}/man1/notmuch.1*
@@ -281,6 +282,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Tue Feb 05 2019 Michael J Gruber <mjg@fedoraproject.org> - 0.28.1-1
+- Update to 0.28.1
+
 * Tue Feb 05 2019 Michael J Gruber <mjg@fedoraproject.org> - 0.27-7
 - Switch to python3 only for Fedora 30 and above
 

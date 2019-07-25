@@ -18,11 +18,14 @@
 
 Name:           notmuch
 Version:        0.29.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
 Source0:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz
+Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
+# Imported from public key servers; author provides no fingerprint!
+Source2:	gpgkey-815B63982A79F8E7C72786C4762B57BB784206AD.gpg
 
 # These should be removed in Fedora 26
 Obsoletes:      notmuch-deliver < 0.19-5
@@ -34,6 +37,7 @@ BuildRequires:  emacs-el
 BuildRequires:  emacs-nox
 Buildrequires:  gcc gcc-c++
 BuildRequires:  glib libtool
+BuildRequires:	gnupg2
 %if 0%{?fedora} >= 27
 BuildRequires:  gmime30-devel
 %else
@@ -145,6 +149,7 @@ notmuch-vim is a Vim plugin that provides a fully usable mail client
 interface, utilizing the notmuch framework.
 
 %prep
+%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 %setup -q
 
 %build
@@ -282,6 +287,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Thu Jul 25 2019 Michael J Gruber <mjg@fedoraproject.org> - 0.29.1-2
+- verify package signature
+
 * Wed Jun 12 2019 Michael J Gruber <mjg@fedoraproject.org> - 0.29.1-1
 - Update to 0.29.1
 

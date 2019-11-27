@@ -17,7 +17,7 @@
 %endif
 
 Name:           notmuch
-Version:        0.29.2
+Version:        0.29.3
 Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
@@ -287,6 +287,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Wed Nov 27 2019 Michael J Gruber <mjg@fedoraproject.org> - 0.29.3-1
+- bugfix release (bz #1763420)
+
 * Thu Oct 31 2019 Michael J Gruber <mjg@fedoraproject.org> - 0.29.2-1
 - bugfix release
 

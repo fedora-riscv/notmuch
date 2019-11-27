@@ -17,15 +17,15 @@
 %endif
 
 Name:           notmuch
-Version:        0.29.1
-Release:        4%{?dist}
+Version:        0.29.2
+Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
 Source0:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz
 Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
 # Imported from public key servers; author provides no fingerprint!
-Source2:	gpgkey-815B63982A79F8E7C72786C4762B57BB784206AD.gpg
+Source2:	gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
 
 # These should be removed in Fedora 26
 Obsoletes:      notmuch-deliver < 0.19-5
@@ -287,6 +287,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Thu Oct 31 2019 Michael J Gruber <mjg@fedoraproject.org> - 0.29.2-1
+- bugfix release
+
 * Thu Oct 03 2019 Miro Hrončok <mhroncok@redhat.com> - 0.29.1-4
 - Rebuilt for Python 3.8.0rc1 (#1748018)
 

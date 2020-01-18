@@ -18,7 +18,7 @@
 
 Name:           notmuch
 Version:        0.29.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -287,6 +287,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Sat Jan 18 2020 Mamoru TASAKA <mtasaka@fedoraproject.org> - 0.29.3-2
+- F-32: rebuild against ruby27
+
 * Wed Nov 27 2019 Michael J Gruber <mjg@fedoraproject.org> - 0.29.3-1
 - bugfix release (bz #1763420)
 

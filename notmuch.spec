@@ -23,13 +23,13 @@
 %endif
 
 Name:           notmuch
-Version:        0.30~rc2
+Version:        0.30~rc3
 Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
 Source0:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz
-#Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.gpg
+Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
 # Imported from public key servers; author provides no fingerprint!
 Source2:	gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
 
@@ -172,7 +172,7 @@ notmuch-vim is a Vim plugin that provides a fully usable mail client
 interface, utilizing the notmuch framework.
 
 %prep
-#%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 %setup -q
 
 %build
@@ -322,6 +322,11 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Fri Jul 03 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.30~rc3-1
+- rebase with upstream RC
+- reenable signature verification which was missing in rc2
+- do not track the signature file in git (but do track the keyring) as per PG
+
 * Thu Jun 25 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.30~rc2-1
 - rebase with upstream RC
 - build new default (CFFI) python module but keep legacy for now

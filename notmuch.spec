@@ -23,7 +23,7 @@
 %endif
 
 Name:           notmuch
-Version:        0.30~rc3
+Version:        0.30
 Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
@@ -322,6 +322,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Sat Jul 11 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.30-1
+- rebase with upstream release 0.30
+
 * Fri Jul 03 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.30~rc3-1
 - rebase with upstream RC
 - reenable signature verification which was missing in rc2

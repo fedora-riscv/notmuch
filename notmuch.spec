@@ -1,5 +1,6 @@
 %if 0%{?fedora}
-%global with_python3 1
+%global with_python3legacy 1
+%global with_python3CFFI 1
 %endif
 
 %if 0%{?fedora} <= 29
@@ -16,9 +17,14 @@
 %{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %endif
 
+# build python 3 modules with python 3 ;)
+%if 0%{?with_python3legacy} || 0%{?with_python3CFFI}
+%global with_python3 1
+%endif
+
 Name:           notmuch
-Version:        0.29.3
-Release:        4%{?dist}
+Version:        0.30
+Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -38,6 +44,7 @@ BuildRequires:  emacs-nox
 Buildrequires:  gcc gcc-c++
 BuildRequires:  glib libtool
 BuildRequires:	gnupg2
+BuildRequires:	gnupg2-smime
 %if 0%{?fedora} >= 27
 BuildRequires:  gmime30-devel
 %else
@@ -60,6 +67,11 @@ BuildRequires:  zlib-devel
 BuildRequires:  python3-devel
 BuildRequires:  python3-docutils
 BuildRequires:  python3-sphinx
+%endif
+
+%if 0%{?with_python3CFFI}
+BuildRequires:  python3-setuptools
+BuildRequires:  python3-cffi
 %endif
 
 %description
@@ -107,14 +119,25 @@ Requires:       python2
 %{summary}.
 %endif
 
-%if 0%{?with_python3}
+%if 0%{?with_python3legacy}
 %package -n python3-notmuch
-Summary:    Python3 bindings for notmuch
+Summary:    Python3 bindings for notmuch (legacy)
 %{?python_provide:%python_provide python3-notmuch}
 
 Requires:       python3
 
 %description -n python3-notmuch
+%{summary}.
+%endif
+
+%if 0%{?with_python3CFFI}
+%package -n python3-notmuch2
+Summary:    Python3 bindings for notmuch (cffi)
+%{?python_provide:%python_provide python3-notmuch2}
+
+Requires:       python3
+
+%description -n python3-notmuch2
 %{summary}.
 %endif
 
@@ -186,7 +209,14 @@ pushd bindings/python
     %if 0%{?with_python2}
     %py2_install
     %endif
-    %if 0%{?with_python3}
+    %if 0%{?with_python3legacy}
+    %py3_install
+    %endif
+popd
+
+# Install the python cffi bindings and documentation
+pushd bindings/python-cffi
+    %if 0%{?with_python3CFFI}
     %py3_install
     %endif
 popd
@@ -223,8 +253,8 @@ vim -u NONE -esX -c "helptags ." -c quit
 
 %files
 %doc AUTHORS COPYING COPYING-GPL-3 README
-%{_datadir}/zsh/functions/Completion/Unix/_notmuch
-%{_datadir}/zsh/functions/Completion/Unix/_email-notmuch
+%{_datadir}/zsh/site-functions/_notmuch
+%{_datadir}/zsh/site-functions/_email-notmuch
 %{_datadir}/bash-completion/completions/notmuch
 %{_bindir}/notmuch
 %{_mandir}/man1/notmuch.1*
@@ -264,10 +294,15 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{python2_sitelib}/notmuch*
 %endif
 
-%if 0%{?with_python3}
+%if 0%{?with_python3legacy}
 %files -n python3-notmuch
 %doc bindings/python/README
 %{python3_sitelib}/notmuch*
+%endif
+
+%if 0%{?with_python3CFFI}
+%files -n python3-notmuch2
+%{python3_sitearch}/notmuch*
 %endif
 
 %files -n ruby-notmuch
@@ -287,6 +322,18 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Sat Jul 11 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.30-1
+- rebase with upstream release 0.30
+
+* Fri Jul 03 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.30~rc3-1
+- rebase with upstream RC
+- reenable signature verification which was missing in rc2
+- do not track the signature file in git (but do track the keyring) as per PG
+
+* Thu Jun 25 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.30~rc2-1
+- rebase with upstream RC
+- build new default (CFFI) python module but keep legacy for now
+
 * Tue May 26 2020 Miro Hrončok <mhroncok@redhat.com> - 0.29.3-4
 - Rebuilt for Python 3.9
 

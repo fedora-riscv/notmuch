@@ -23,8 +23,8 @@
 %endif
 
 Name:           notmuch
-Version:        0.30
-Release:        2%{?dist}
+Version:        0.31
+Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -322,6 +322,15 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Sun Sep 06 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31-1
+- rebase with upstream release 0.31 (#1876170)
+
+* Sun Aug 30 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31~rc2-1
+- rebase with upstream RC
+
+* Wed Aug 19 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31~rc1-1
+- rebase with upstream RC
+
 * Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 0.30-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 

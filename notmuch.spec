@@ -24,7 +24,7 @@
 
 Name:           notmuch
 Version:        0.31.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -43,6 +43,7 @@ BuildRequires:  emacs-el
 BuildRequires:  emacs-nox
 Buildrequires:  gcc gcc-c++
 BuildRequires:  glib libtool
+BuildRequires:  doxygen
 BuildRequires:	gnupg2
 BuildRequires:	gnupg2-smime
 %if 0%{?fedora} >= 27
@@ -279,6 +280,7 @@ vim -u NONE -esX -c "helptags ." -c quit
 %files devel
 %{_libdir}/libnotmuch.so
 %{_includedir}/*
+%{_mandir}/man3/notmuch*.3*
 
 %files -n emacs-notmuch
 %{_emacs_sitelispdir}/*.el
@@ -322,6 +324,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Fri Dec 11 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31.2-2
+- build API doc
+
 * Sun Nov 08 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31.2-1
 - rebase with bugfix release
 

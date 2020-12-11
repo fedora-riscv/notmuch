@@ -24,7 +24,7 @@
 
 Name:           notmuch
 Version:        0.31.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -73,6 +73,8 @@ BuildRequires:  python3-sphinx
 
 %if 0%{?with_python3CFFI}
 BuildRequires:  python3-setuptools
+BuildRequires:  python3-pytest
+BuildRequires:  python3-pytest-shutil
 BuildRequires:  python3-cffi
 %endif
 
@@ -194,6 +196,13 @@ pushd bindings/python
     %py2_build
     %endif
     %if 0%{?with_python3}
+    %py3_build
+    %endif
+popd
+
+# Build the python cffi bindings
+pushd bindings/python-cffi
+    %if 0%{?with_python3CFFI}
     %py3_build
     %endif
 popd
@@ -338,6 +347,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Fri Dec 11 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31.2-4
+- fix new CFFI python bindings (notmuch2)
+
 * Fri Dec 11 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31.2-3
 - ship info doc
 

@@ -24,7 +24,7 @@
 
 Name:           notmuch
 Version:        0.31.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -44,6 +44,7 @@ BuildRequires:  emacs-nox
 Buildrequires:  gcc gcc-c++
 BuildRequires:  glib libtool
 BuildRequires:  doxygen
+BuildRequires:  texinfo
 BuildRequires:	gnupg2
 BuildRequires:	gnupg2-smime
 %if 0%{?fedora} >= 27
@@ -74,6 +75,9 @@ BuildRequires:  python3-sphinx
 BuildRequires:  python3-setuptools
 BuildRequires:  python3-cffi
 %endif
+
+Requires(post): /sbin/install-info
+Requires(postun): /sbin/install-info
 
 %description
 Fast system for indexing, searching, and tagging email.  Even if you
@@ -239,10 +243,19 @@ pushd vim
 popd
 
 rm -f %{buildroot}/%{_datadir}/applications/mimeinfo.cache
+rm -f %{buildroot}%{_infodir}/dir
 
 ls -lR %{buildroot}%{_mandir}
 
 %ldconfig_scriptlets
+
+%post
+/sbin/install-info %{_infodir}/notmuch.info %{_infodir}/dir ||:
+
+%preun
+if [ $1 -eq 0 ]; then
+  /sbin/install-info --delete %{_infodir}/notmuch.info %{_infodir}/dir ||:
+fi
 
 %post vim
 cd %{_datadir}/vim/vimfiles/doc
@@ -275,6 +288,7 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_mandir}/man1/notmuch-compact.1*
 %{_mandir}/man5/notmuch*.5*
 %{_mandir}/man7/notmuch*.7*
+%{_infodir}/*.info*
 %{_libdir}/libnotmuch.so.5*
 
 %files devel
@@ -324,6 +338,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Fri Dec 11 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31.2-3
+- ship info doc
+
 * Fri Dec 11 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31.2-2
 - build API doc
 

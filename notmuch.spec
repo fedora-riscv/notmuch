@@ -23,8 +23,8 @@
 %endif
 
 Name:           notmuch
-Version:        0.31.2
-Release:        5%{?dist}
+Version:        0.31.3
+Release:        1%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -350,6 +350,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Fri Dec 25 18:11:21 CET 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31.3-1
+- rebase with bugfix release
+
 * Fri Dec 11 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31.2-5
 - fix sphinx race condition in build
 

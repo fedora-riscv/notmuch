@@ -24,7 +24,7 @@
 
 Name:           notmuch
 Version:        0.31.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -32,8 +32,6 @@ Source0:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz
 Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
 # Imported from public key servers; author provides no fingerprint!
 Source2:        gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
-
-Patch1:         notmuch-0.31.2-fix-sphinx-race-condition.patch
 
 # These should be removed in Fedora 26
 Obsoletes:      notmuch-deliver < 0.19-5
@@ -183,7 +181,6 @@ interface, utilizing the notmuch framework.
 %prep
 %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 %setup -q
-%patch1 -p1
 
 %build
 # The %%configure macro cannot be used because notmuch doesn't support
@@ -350,6 +347,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Fri Dec 25 18:27:23 CET 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31.3-2
+- drop upstream patch
+
 * Fri Dec 25 18:11:21 CET 2020 Michael J Gruber <mjg@fedoraproject.org> - 0.31.3-1
 - rebase with bugfix release
 

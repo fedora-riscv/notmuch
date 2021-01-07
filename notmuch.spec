@@ -37,6 +37,7 @@ Source2:        gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
 Obsoletes:      notmuch-deliver < 0.19-5
 Provides:       notmuch-deliver >= 0.19-5
 
+BuildRequires: make
 BuildRequires:  bash-completion
 BuildRequires:  emacs
 BuildRequires:  emacs-el

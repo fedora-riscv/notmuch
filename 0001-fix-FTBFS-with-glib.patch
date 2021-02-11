@@ -1,0 +1,44 @@
+From ecde62279988845021ce8e878ed8551930ff1a7b Mon Sep 17 00:00:00 2001
+Message-Id: <ecde62279988845021ce8e878ed8551930ff1a7b.1613053008.git.git@grubix.eu>
+From: Michael J Gruber <git@grubix.eu>
+Date: Thu, 11 Feb 2021 11:15:02 +0100
+Subject: [PATCH] fix FTBFS with glib
+
+With newer glib, notmuch FTBFS because of C linkage error. This is due
+to a misplaced include (inside an extern "C") which was always there
+but exposed only recently through this change in glib:
+
+https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1715
+
+Move to the include to the outside of the extern block.
+
+Signed-off-by: Michael J Gruber <git@grubix.eu>
+---
+ lib/notmuch-private.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/notmuch-private.h b/lib/notmuch-private.h
+index 57ec7f72..9752ae94 100644
+--- a/lib/notmuch-private.h
++++ b/lib/notmuch-private.h
+@@ -31,6 +31,8 @@
+ 
+ #include "notmuch.h"
+ 
++#include "gmime-extra.h"
++
+ NOTMUCH_BEGIN_DECLS
+ 
+ #include <stdlib.h>
+@@ -47,8 +49,6 @@ NOTMUCH_BEGIN_DECLS
+ 
+ #include <talloc.h>
+ 
+-#include "gmime-extra.h"
+-
+ #include "xutil.h"
+ #include "error_util.h"
+ #include "string-util.h"
+-- 
+2.30.0.368.g1c478ce6f6
+

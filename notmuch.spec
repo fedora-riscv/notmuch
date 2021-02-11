@@ -24,7 +24,7 @@
 
 Name:           notmuch
 Version:        0.31.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -33,11 +33,13 @@ Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
 # Imported from public key servers; author provides no fingerprint!
 Source2:        gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
 
+Patch1:         0001-fix-FTBFS-with-glib.patch
+
 # These should be removed in Fedora 26
 Obsoletes:      notmuch-deliver < 0.19-5
 Provides:       notmuch-deliver >= 0.19-5
 
-BuildRequires: make
+BuildRequires:  make
 BuildRequires:  bash-completion
 BuildRequires:  emacs
 BuildRequires:  emacs-el
@@ -182,6 +184,7 @@ interface, utilizing the notmuch framework.
 %prep
 %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 %setup -q
+%patch1 -p1
 
 %build
 # The %%configure macro cannot be used because notmuch doesn't support
@@ -348,6 +351,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Thu Feb 11 2021 Michael J Gruber <mjg@fedoraproject.org> - 0.31.3-5
+- fix FTBS #927636
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 0.31.3-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 

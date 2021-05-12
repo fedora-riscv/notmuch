@@ -24,7 +24,7 @@
 
 Name:           notmuch
 Version:        0.32
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -32,6 +32,8 @@ Source0:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz
 Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
 # Imported from public key servers; author provides no fingerprint!
 Source2:        gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
+
+Patch1:		notmuch-0.32-pre-hook.patch
 
 # These should be removed in Fedora 26
 Obsoletes:      notmuch-deliver < 0.19-5
@@ -182,6 +184,7 @@ interface, utilizing the notmuch framework.
 %prep
 %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 %setup -q
+%patch1 -p1
 
 %build
 # The %%configure macro cannot be used because notmuch doesn't support
@@ -348,6 +351,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Wed May 12 2021 Michael J Gruber <mjg@fedoraproject.org> - 0.32-2
+- fix db changes from pre-new-hook
+
 * Sun May 02 2021 Michael J Gruber <mjg@fedoraproject.org> - 0.32-1
 - rebase with upstream release 0.32
 

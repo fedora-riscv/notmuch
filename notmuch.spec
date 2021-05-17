@@ -24,7 +24,7 @@
 
 Name:           notmuch
 Version:        0.32.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -168,7 +168,7 @@ the Notmuch mail indexer.
 
 %package    vim
 Summary:    A Vim plugin for notmuch
-Requires:   %{name} = %{version}-%{release}
+Requires:   ruby-%{name} = %{version}-%{release}
 Requires:   rubygem-mail
 Requires:   vim-enhanced
 # Required for updating helptags in scriptlets.
@@ -348,6 +348,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Mon May 17 2021 Michael J Gruber <mjg@fedoraproject.org> - 0.32.1-2
+- correct dependency for the vim plugin
+
 * Sat May 15 2021 Michael J Gruber <mjg@fedoraproject.org> - 0.32.1-1
 - rebase with upstream release 0.32.1
 

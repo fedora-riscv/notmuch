@@ -24,7 +24,7 @@
 
 Name:           notmuch
 Version:        0.32.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -348,6 +348,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Fri Jun 04 2021 Python Maint <python-maint@redhat.com> - 0.32.1-3
+- Rebuilt for Python 3.10
+
 * Mon May 17 2021 Michael J Gruber <mjg@fedoraproject.org> - 0.32.1-2
 - correct dependency for the vim plugin
 

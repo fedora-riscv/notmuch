@@ -1,13 +1,13 @@
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 9
 %global with_python3legacy 1
 %global with_python3CFFI 1
 %endif
 
-%if 0%{?fedora} <= 29
+%if 0%{?fedora} && 0%{?fedora} <= 29
 %global with_python2 1
 %endif
 
-%if 0%{?rhel} && 0%{?rhel} <= 7
+%if 0%{?rhel} && 0%{?rhel} <= 8
 %global with_python2 1
 %endif
 
@@ -24,7 +24,7 @@
 
 Name:           notmuch
 Version:        0.32.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
 URL:            https://notmuchmail.org/
@@ -48,7 +48,7 @@ BuildRequires:  doxygen
 BuildRequires:  texinfo
 BuildRequires:  gnupg2
 BuildRequires:  gnupg2-smime
-%if 0%{?fedora} >= 27
+%if 0%{?fedora} >= 27 || 0%{?rhel} >= 8
 BuildRequires:  gmime30-devel
 %else
 BuildRequires:  gmime-devel
@@ -348,6 +348,9 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/vim/vimfiles/syntax/notmuch-show.vim
 
 %changelog
+* Wed Jun 09 2021 Michael J Gruber <mjg@fedoraproject.org> - 0.32.1-4
+- prepare for ELN and upcoming RHEL
+
 * Fri Jun 04 2021 Python Maint <python-maint@redhat.com> - 0.32.1-3
 - Rebuilt for Python 3.10
 

@@ -249,14 +249,6 @@ rm -f %{buildroot}%{_infodir}/dir
 
 ls -lR %{buildroot}%{_mandir}
 
-%post
-/sbin/install-info %{_infodir}/notmuch.info %{_infodir}/dir ||:
-
-%preun
-if [ $1 -eq 0 ]; then
-  /sbin/install-info --delete %{_infodir}/notmuch.info %{_infodir}/dir ||:
-fi
-
 %post vim
 cd %{_datadir}/vim/vimfiles/doc
 vim -u NONE -esX -c "helptags ." -c quit

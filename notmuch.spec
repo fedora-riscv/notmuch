@@ -249,8 +249,6 @@ rm -f %{buildroot}%{_infodir}/dir
 
 ls -lR %{buildroot}%{_mandir}
 
-%ldconfig_scriptlets
-
 %post
 /sbin/install-info %{_infodir}/notmuch.info %{_infodir}/dir ||:
 

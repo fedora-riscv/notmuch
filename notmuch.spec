@@ -3,10 +3,6 @@
 %global with_python3CFFI 1
 %endif
 
-%if 0%{?fedora} && 0%{?fedora} <= 29
-%global with_python2 1
-%endif
-
 %if 0%{?rhel} && 0%{?rhel} <= 8
 %global with_python2 1
 %endif
@@ -32,10 +28,6 @@ Source0:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz
 Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
 # Imported from public key servers; author provides no fingerprint!
 Source2:        gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
-
-# These should be removed in Fedora 26
-Obsoletes:      notmuch-deliver < 0.19-5
-Provides:       notmuch-deliver >= 0.19-5
 
 BuildRequires:  make
 BuildRequires:  bash-completion

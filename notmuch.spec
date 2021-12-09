@@ -1,3 +1,6 @@
+# currently the test suite is flaky
+# leave with_tests unset
+
 %if 0%{?fedora} || 0%{?rhel} >= 9
 %global with_python3legacy 1
 %global with_python3CFFI 1
@@ -35,7 +38,7 @@ BuildRequires:  emacs
 BuildRequires:  emacs-el
 BuildRequires:  emacs-nox
 Buildrequires:  gcc gcc-c++
-BuildRequires:  glib libtool
+BuildRequires:  libtool
 BuildRequires:  doxygen
 BuildRequires:  texinfo
 BuildRequires:  gnupg2
@@ -66,8 +69,10 @@ BuildRequires:  python3-sphinx
 
 %if 0%{?with_python3CFFI}
 BuildRequires:  python3-setuptools
+%if 0%{?with_tests}
 BuildRequires:  python3-pytest
 BuildRequires:  python3-pytest-shutil
+%endif
 BuildRequires:  python3-cffi
 %endif
 

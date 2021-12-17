@@ -10,12 +10,6 @@
 %global with_python2 1
 %endif
 
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2: %global __python2 /usr/bin/python2}
-%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
-
 # build python 3 modules with python 3 ;)
 %if 0%{?with_python3legacy} || 0%{?with_python3CFFI}
 %global with_python3 1
@@ -43,11 +37,7 @@ BuildRequires:  doxygen
 BuildRequires:  texinfo
 BuildRequires:  gnupg2
 BuildRequires:  gnupg2-smime
-%if 0%{?fedora} >= 27 || 0%{?rhel} >= 8
 BuildRequires:  gmime30-devel
-%else
-BuildRequires:  gmime-devel
-%endif
 BuildRequires:  libtalloc-devel
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators

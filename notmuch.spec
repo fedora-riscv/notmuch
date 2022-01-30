@@ -16,7 +16,7 @@
 %endif
 
 Name:           notmuch
-Version:        0.34.3
+Version:        0.35~rc0
 Release:        %autorelease
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
@@ -25,7 +25,6 @@ Source0:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz
 Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
 # Imported from public key servers; author provides no fingerprint!
 Source2:        gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
-Patch1:         0001-configure-Ignore-more-options-that-Fedora-spec-macro.patch
 
 BuildRequires:  make
 BuildRequires:  bash-completion
@@ -281,7 +280,7 @@ vim -u NONE -esX -c "helptags ." -c quit
 %files -n emacs-notmuch
 %{_emacs_sitelispdir}/*.el
 %{_emacs_sitelispdir}/*.elc
-%{_emacs_sitelispdir}/notmuch-logo.png
+%{_emacs_sitelispdir}/notmuch-logo.svg
 %{_mandir}/man1/notmuch-emacs-mua.1*
 %{_bindir}/notmuch-emacs-mua
 %{_datadir}/applications/notmuch-emacs-mua.desktop

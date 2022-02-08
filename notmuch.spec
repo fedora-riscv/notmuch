@@ -1,12 +1,15 @@
-# currently the test suite is flaky
-# leave with_tests unset
+%if 0%{?fedora} || 0%{?rhel} >= 8
+%bcond_without tests
+%else
+%bcond_with tests
+%endif
 
-%if 0%{?fedora} || 0%{?rhel} >= 9
+%if 0%{?fedora} || 0%{?rhel} >= 8
 %global with_python3legacy 1
 %global with_python3CFFI 1
 %endif
 
-%if 0%{?rhel} && 0%{?rhel} <= 8
+%if 0%{?rhel} && 0%{?rhel} <= 7
 %global with_python2 1
 %endif
 
@@ -59,11 +62,25 @@ BuildRequires:  python3-sphinx
 
 %if 0%{?with_python3CFFI}
 BuildRequires:  python3-setuptools
-%if 0%{?with_tests}
+  %if %{with tests}
 BuildRequires:  python3-pytest
+# Not available on *EL, skip some tests there:
+    %if 0%{?fedora}
 BuildRequires:  python3-pytest-shutil
-%endif
+    %endif
+  %endif
 BuildRequires:  python3-cffi
+%endif
+
+%if %{with tests}
+# Not available on *EL, skip some tests there:
+  %if 0%{?fedora}
+BuildRequires:  dtach
+  %endif
+BuildRequires:  gdb
+BuildRequires:  man
+BuildRequires:  openssl
+# You might also want to rebuild with valgrind-devel libasan libasan-static.
 %endif
 
 Requires(post): /sbin/install-info
@@ -195,6 +212,12 @@ popd
 pushd contrib/notmuch-mutt
     make
 popd
+
+%if %{with tests}
+%check
+# armv7hl pulls in libasan but we build without
+NOTMUCH_SKIP_TESTS="asan" make test V=1
+%endif
 
 %install
 %make_install

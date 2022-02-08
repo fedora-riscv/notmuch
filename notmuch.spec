@@ -1,12 +1,15 @@
-# currently the test suite is flaky
-# leave with_tests unset
+%if 0%{?fedora} || 0%{?rhel} >= 8
+%bcond_without tests
+%else
+%bcond_with tests
+%endif
 
-%if 0%{?fedora} || 0%{?rhel} >= 9
+%if 0%{?fedora} || 0%{?rhel} >= 8
 %global with_python3legacy 1
 %global with_python3CFFI 1
 %endif
 
-%if 0%{?rhel} && 0%{?rhel} <= 8
+%if 0%{?rhel} && 0%{?rhel} <= 7
 %global with_python2 1
 %endif
 
@@ -25,6 +28,7 @@ Source0:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz
 Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
 # Imported from public key servers; author provides no fingerprint!
 Source2:        gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
+Patch1:		0001-test-allow-to-use-full-sync.patch
 
 BuildRequires:  make
 BuildRequires:  bash-completion
@@ -59,11 +63,25 @@ BuildRequires:  python3-sphinx
 
 %if 0%{?with_python3CFFI}
 BuildRequires:  python3-setuptools
-%if 0%{?with_tests}
+  %if %{with tests}
 BuildRequires:  python3-pytest
+# Not available on *EL, skip some tests there:
+    %if 0%{?fedora}
 BuildRequires:  python3-pytest-shutil
-%endif
+    %endif
+  %endif
 BuildRequires:  python3-cffi
+%endif
+
+%if %{with tests}
+# Not available on *EL, skip some tests there:
+  %if 0%{?fedora}
+BuildRequires:  dtach
+  %endif
+BuildRequires:  gdb
+BuildRequires:  man
+BuildRequires:  openssl
+# You might also want to rebuild with valgrind-devel libasan libasan-static.
 %endif
 
 Requires(post): /sbin/install-info
@@ -171,6 +189,7 @@ interface, utilizing the notmuch framework.
 %autosetup -p1
 
 %build
+# DEBUG mtime/stat
 %configure --emacslispdir=%{_emacs_sitelispdir}
 %make_build CFLAGS="$RPM_OPT_FLAGS -fPIC"
 
@@ -195,6 +214,14 @@ popd
 pushd contrib/notmuch-mutt
     make
 popd
+
+%if %{with tests}
+%check
+# armv7hl pulls in libasan but we build without, and should test without it.
+# At least some rhel builds show mtime/stat related Heisenbugs when
+# notmuch new takes shortcuts, so enforce --full-scan there.
+NOTMUCH_SKIP_TESTS="asan" make test V=1 %{?rhel:NOTMUCH_TEST_FULLSCAN=1}
+%endif
 
 %install
 %make_install

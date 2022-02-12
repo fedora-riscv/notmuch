@@ -1,0 +1,41 @@
+From e6efdce75e2d95807984b7476b98e40a56b2b7f7 Mon Sep 17 00:00:00 2001
+Message-Id: <e6efdce75e2d95807984b7476b98e40a56b2b7f7.1644701818.git.git@grubix.eu>
+From: Michael J Gruber <git@grubix.eu>
+Date: Sat, 12 Feb 2022 14:35:15 +0100
+Subject: [PATCH] catch add_message Heisenbug
+
+Signed-off-by: Michael J Gruber <git@grubix.eu>
+---
+ test/test-lib-common.sh | 2 +-
+ test/test-lib.sh        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/test/test-lib-common.sh b/test/test-lib-common.sh
+index ebbf4cdf..b9aded25 100644
+--- a/test/test-lib-common.sh
++++ b/test/test-lib-common.sh
+@@ -226,7 +226,7 @@ EOF
+ # are also supported here, so see that function for details.
+ add_message () {
+     generate_message "$@" &&
+-    notmuch new > /dev/null
++    notmuch new --full-scan > /dev/null
+ }
+ 
+ if test -n "$valgrind"
+diff --git a/test/test-lib.sh b/test/test-lib.sh
+index 833bf5fe..b8720549 100644
+--- a/test/test-lib.sh
++++ b/test/test-lib.sh
+@@ -521,7 +521,7 @@ test_json_nodes () {
+ }
+ 
+ NOTMUCH_NEW () {
+-    notmuch new "${@}" | grep -v -E -e '^Processed [0-9]*( total)? file|Found [0-9]* total file'
++    notmuch new --full-scan "${@}" | grep -v -E -e '^Processed [0-9]*( total)? file|Found [0-9]* total file'
+ }
+ 
+ NOTMUCH_DUMP_TAGS () {
+-- 
+2.35.1.306.ga00bde9711
+

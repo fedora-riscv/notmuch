@@ -28,6 +28,7 @@ Source0:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz
 Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
 # Imported from public key servers; author provides no fingerprint!
 Source2:        gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
+Patch1:		0001-test-allow-to-use-full-sync.patch
 
 BuildRequires:  make
 BuildRequires:  bash-completion
@@ -188,6 +189,7 @@ interface, utilizing the notmuch framework.
 %autosetup -p1
 
 %build
+# DEBUG mtime/stat
 %configure --emacslispdir=%{_emacs_sitelispdir}
 %make_build CFLAGS="$RPM_OPT_FLAGS -fPIC"
 
@@ -215,8 +217,10 @@ popd
 
 %if %{with tests}
 %check
-# armv7hl pulls in libasan but we build without
-NOTMUCH_SKIP_TESTS="asan" make test V=1
+# armv7hl pulls in libasan but we build without, and should test without it.
+# At least some rhel builds show mtime/stat related Heisenbugs when
+# notmuch new takes shortcuts, so enforce --full-scan there.
+NOTMUCH_SKIP_TESTS="asan" make test V=1 %{?rhel:NOTMUCH_TEST_FULLSCAN=1}
 %endif
 
 %install

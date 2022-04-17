@@ -19,7 +19,7 @@
 %endif
 
 Name:           notmuch
-Version:        0.36~rc0
+Version:        0.36~rc1
 Release:        %autorelease
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
@@ -29,7 +29,6 @@ Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
 # Imported from public key servers; author provides no fingerprint!
 Source2:        gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
 Patch1:		0001-test-allow-to-use-full-sync.patch
-Patch2:		0001-fix-build-without-sfsexp.patch
 
 BuildRequires:  make
 BuildRequires:  bash-completion

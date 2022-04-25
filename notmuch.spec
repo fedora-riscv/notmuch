@@ -13,6 +13,12 @@
 %global with_python2 1
 %endif
 
+%if 0%{?fedora} >= 36 || 0%{?rhel} >= 9
+%bcond_without sfsexp
+%else
+%bcond_with sfsexp
+%endif
+
 # build python 3 modules with python 3 ;)
 %if 0%{?with_python3legacy} || 0%{?with_python3CFFI}
 %global with_python3 1
@@ -52,6 +58,9 @@ BuildRequires:  python2-docutils
 BuildRequires:  python2-sphinx
 %endif
 BuildRequires:  ruby-devel
+%if %{with sfsexp}
+BuildRequires:  pkgconfig(sfsexp)
+%endif
 BuildRequires:  xapian-core-devel
 BuildRequires:  zlib-devel
 

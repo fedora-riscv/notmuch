@@ -25,7 +25,7 @@
 %endif
 
 Name:           notmuch
-Version:        0.36
+Version:        0.37~rc0
 Release:        %autorelease
 Summary:        System for indexing, searching, and tagging email
 License:        GPLv3+
@@ -35,6 +35,7 @@ Source1:        https://notmuchmail.org/releases/notmuch-%{version}.tar.xz.asc
 # Imported from public key servers; author provides no fingerprint!
 Source2:        gpgkey-7A18807F100A4570C59684207E4E65C8720B706B.gpg
 Patch1:		0001-test-allow-to-use-full-sync.patch
+Patch2:		0001-test-increase-cffi-timeout.patch
 
 BuildRequires:  make
 BuildRequires:  bash-completion
@@ -88,6 +89,9 @@ BuildRequires:  python3-cffi
 BuildRequires:  dtach
   %endif
 BuildRequires:  gdb
+  %if %{with sfsexp}
+BuildRequires:  git-core
+  %endif
 BuildRequires:  man
 BuildRequires:  openssl
 # You might also want to rebuild with valgrind-devel libasan libasan-static.
@@ -120,6 +124,20 @@ necessary if you plan to do development using Notmuch.
 
 Install notmuch-devel if you are developing C programs which will use the
 Notmuch library.  You'll also need to install the notmuch package.
+
+%if %{with sfsexp}
+%package    git
+Summary:    Manage notmuch tags with git
+Requires:   %{name} = %{version}-%{release}
+Requires:   git-core
+%if 0%{?with_python3CFFI}
+Recommends: python3-notmuch2
+%endif
+
+%description git
+This package contains a simple tool to save, restore, and synchronize
+notmuch tags via git repositories.
+%endif
 
 %package -n emacs-notmuch
 Summary:    Not much support for Emacs
@@ -230,9 +248,10 @@ popd
 %if %{with tests}
 %check
 # armv7hl pulls in libasan but we build without, and should test without it.
+# notmuch-git and its tests require sfsexp.
 # At least some rhel builds show mtime/stat related Heisenbugs when
 # notmuch new takes shortcuts, so enforce --full-scan there.
-NOTMUCH_SKIP_TESTS="asan" make test V=1 %{?rhel:NOTMUCH_TEST_FULLSCAN=1}
+NOTMUCH_SKIP_TESTS="asan%{!?with_sfsexp: git}" make test V=1 %{?rhel:NOTMUCH_TEST_FULLSCAN=1}
 %endif
 
 %install
@@ -240,6 +259,10 @@ NOTMUCH_SKIP_TESTS="asan" make test V=1 %{?rhel:NOTMUCH_TEST_FULLSCAN=1}
 
 # Enable dynamic library stripping.
 find %{buildroot}%{_libdir} -name *.so* -exec chmod 755 {} \;
+
+%if %{with sfsexp}
+install -m0755 notmuch-git nmbug %{buildroot}%{_bindir}/
+%endif
 
 # Install the python bindings and documentation
 pushd bindings/python
@@ -274,6 +297,14 @@ pushd vim
     make install DESTDIR=%{buildroot} prefix="%{_datadir}/vim/vimfiles"
 popd
 
+%if %{without sfsexp}
+# Do not install notmuch-git which requires sfsexp
+rm -f %{buildroot}%{_mandir}/man1/nmbug.1*
+rm -f %{buildroot}%{_mandir}/man1/notmuch-git.1*
+rm -f %{buildroot}%{_infodir}/nmbug.info*
+rm -f %{buildroot}%{_infodir}/notmuch-git.info*
+%endif
+
 rm -f %{buildroot}/%{_datadir}/applications/mimeinfo.cache
 rm -f %{buildroot}%{_infodir}/dir
 
@@ -291,8 +322,10 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_datadir}/zsh/site-functions/_email-notmuch
 %{_datadir}/bash-completion/completions/notmuch
 %{_bindir}/notmuch
+%{_libdir}/libnotmuch.so.5*
 %{_mandir}/man1/notmuch.1*
 %{_mandir}/man1/notmuch-address.1*
+%{_mandir}/man1/notmuch-compact.1*
 %{_mandir}/man1/notmuch-config.1*
 %{_mandir}/man1/notmuch-count.1*
 %{_mandir}/man1/notmuch-dump.1*
@@ -305,24 +338,54 @@ vim -u NONE -esX -c "helptags ." -c quit
 %{_mandir}/man1/notmuch-setup.1*
 %{_mandir}/man1/notmuch-show.1*
 %{_mandir}/man1/notmuch-tag.1*
-%{_mandir}/man1/notmuch-compact.1*
-%{_mandir}/man5/notmuch*.5*
-%{_mandir}/man7/notmuch*.7*
-%{_infodir}/*.info*
-%{_libdir}/libnotmuch.so.5*
+%{_mandir}/man5/notmuch-hooks.5*
+%{_mandir}/man7/notmuch-properties.7*
+%{_mandir}/man7/notmuch-search-terms.7*
+%{_mandir}/man7/notmuch-sexp-queries.7*
+%{_infodir}/notmuch.info*
+%{_infodir}/notmuch-address.info*
+%{_infodir}/notmuch-compact.info*
+%{_infodir}/notmuch-config.info*
+%{_infodir}/notmuch-count.info*
+%{_infodir}/notmuch-dump.info*
+%{_infodir}/notmuch-hooks.info*
+%{_infodir}/notmuch-insert.info*
+%{_infodir}/notmuch-new.info*
+%{_infodir}/notmuch-properties.info*
+%{_infodir}/notmuch-reindex.info*
+%{_infodir}/notmuch-reply.info*
+%{_infodir}/notmuch-restore.info*
+%{_infodir}/notmuch-search-terms.info*
+%{_infodir}/notmuch-search.info*
+%{_infodir}/notmuch-setup.info*
+%{_infodir}/notmuch-sexp-queries.info*
+%{_infodir}/notmuch-show.info*
+%{_infodir}/notmuch-tag.info*
 
 %files devel
 %{_libdir}/libnotmuch.so
 %{_includedir}/*
 %{_mandir}/man3/notmuch*.3*
 
+%if %{with sfsexp}
+%files git
+%{_bindir}/nmbug
+%{_bindir}/notmuch-git
+%{_mandir}/man1/nmbug.1*
+%{_mandir}/man1/notmuch-git.1*
+%{_infodir}/nmbug.info*
+%{_infodir}/notmuch-git.info*
+%endif
+
 %files -n emacs-notmuch
 %{_emacs_sitelispdir}/*.el
 %{_emacs_sitelispdir}/*.elc
 %{_emacs_sitelispdir}/notmuch-logo.svg
-%{_mandir}/man1/notmuch-emacs-mua.1*
-%{_bindir}/notmuch-emacs-mua
 %{_datadir}/applications/notmuch-emacs-mua.desktop
+%{_bindir}/notmuch-emacs-mua
+%{_mandir}/man1/notmuch-emacs-mua.1*
+%{_infodir}/notmuch-emacs-mua.info*
+%{_infodir}/notmuch-emacs.info*
 
 %if 0%{?with_python2}
 %files -n python2-notmuch

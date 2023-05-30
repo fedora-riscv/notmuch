@@ -250,9 +250,12 @@ popd
 %check
 # armv7hl pulls in libasan but we build without, and should test without it.
 # notmuch-git and its tests require sfsexp.
+# At least on koji/copr, test suite suffers from race conditions when parallelised.
 # At least some rhel builds show mtime/stat related Heisenbugs when
 # notmuch new takes shortcuts, so enforce --full-scan there.
-NOTMUCH_SKIP_TESTS="asan%{!?with_sfsexp: git}" make test V=1 %{?rhel:NOTMUCH_TEST_FULLSCAN=1}
+NOTMUCH_SKIP_TESTS="asan%{!?with_sfsexp: git}" \
+NOTMUCH_TEST_SERIALIZE="yesplease" \
+make test V=1 %{?rhel:NOTMUCH_TEST_FULLSCAN=1}
 %endif
 
 %install

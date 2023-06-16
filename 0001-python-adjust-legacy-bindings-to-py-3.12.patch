@@ -1,0 +1,35 @@
+From d86aa787c32b44a39ac1e3dc7b84b77534f511ca Mon Sep 17 00:00:00 2001
+Message-ID: <d86aa787c32b44a39ac1e3dc7b84b77534f511ca.1686909798.git.git@grubix.eu>
+From: Michael J Gruber <git@grubix.eu>
+Date: Fri, 16 Jun 2023 11:27:46 +0200
+Subject: [PATCH] python: adjust legacy bindings to py 3.12
+
+Py 3.12 finally pulled the plug on the `SafeConfigParser` class which
+has been deprecated since py 3.2.
+
+We use it in the legacy bindings only, so take the easy route of
+importing `ConfigParser` as `SafeConfigParser` and monkey-patching so
+that the class has the expected interface.
+---
+ bindings/python/notmuch/compat.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/bindings/python/notmuch/compat.py b/bindings/python/notmuch/compat.py
+index c931329e..4a94e05c 100644
+--- a/bindings/python/notmuch/compat.py
++++ b/bindings/python/notmuch/compat.py
+@@ -47,7 +47,10 @@ if sys.version_info[0] == 2:
+ 
+         return value
+ else:
+-    from configparser import SafeConfigParser
++    from configparser import ConfigParser as SafeConfigParser
++
++    if not hasattr(SafeConfigParser, 'readfp'):   # py >= 3.12
++        SafeConfigParser.readfp = SafeConfigParser.read_file
+ 
+     class Python3StringMixIn(object):
+         def __str__(self):
+-- 
+2.41.0.169.g493b9e920c
+
